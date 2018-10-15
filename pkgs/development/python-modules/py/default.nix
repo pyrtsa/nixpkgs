@@ -1,11 +1,11 @@
 { stdenv, buildPythonPackage, fetchPypi, setuptools_scm }:
 buildPythonPackage rec {
   pname = "py";
-  version = "1.5.4";
+  version = "1.7.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "3fd59af7435864e1a243790d322d763925431213b6b8529c6ca71081ace3bbf7";
+    sha256 = "152nyjvd8phqbm9pwlnfx0xi4c6343hakjzg42sp4qw3k1qn74mz";
   };
 
   # Circular dependency on pytest

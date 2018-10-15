@@ -10,11 +10,11 @@
 
 buildPythonPackage rec {
   pname = "prompt_toolkit";
-  version = "2.0.6";
+  version = "1.0.15";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "0m4pn3ccvjkq4mnczd5szfj1qy5h1lwx22z2cla6drlpfgynyxl2";
+    sha256 = "858588f1983ca497f1cf4ffde01d978a3ea02b01c8a26a8bbc5cd2e66d816917";
   };
   checkPhase = ''
     rm prompt_toolkit/win32_types.py

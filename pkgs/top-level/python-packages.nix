@@ -832,6 +832,8 @@ in {
 
   backports_lzma = callPackage ../development/python-modules/backports_lzma { };
 
+  backports_os = callPackage ../development/python-modules/backports_os { };
+
   backports_tempfile = callPackage ../development/python-modules/backports_tempfile { };
 
   backports_unittest-mock = callPackage ../development/python-modules/backports_unittest-mock {};
@@ -5961,33 +5963,17 @@ in {
 
   httpretty = buildPythonPackage rec {
     name = "httpretty-${version}";
-    version = "0.8.10";
+    version = "0.9.5";
     doCheck = false;
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/h/httpretty/${name}.tar.gz";
-      sha256 = "1nmdk6d89z14x3wg4yxywlxjdip16zc8bqnfb471z1365mr74jj7";
+      sha256 = "1mqazmlz1cplbnzb0r9bd5m95yh8kiy7vqz93lggm6rikjys4gsl";
     };
 
     buildInputs = with self; [ tornado requests httplib2 sure nose coverage certifi ];
 
     propagatedBuildInputs = with self; [ urllib3 ];
-
-    postPatch = ''
-      sed -i -e 's/==.*$//' *requirements.txt
-      # XXX: Drop this after version 0.8.4 is released.
-      patch httpretty/core.py <<DIFF
-      ***************
-      *** 566 ****
-      !                 'content-length': len(self.body)
-      --- 566 ----
-      !                 'content-length': str(len(self.body))
-      DIFF
-
-      # Explicit encoding flag is required with python3, unless locale is set.
-      ${if !self.isPy3k then "" else
-        "patch -p0 -i ${../development/python-modules/httpretty/setup.py.patch}"}
-    '';
 
     meta = {
       homepage = "https://falcao.it/HTTPretty/";
@@ -6043,6 +6029,56 @@ in {
   };
 
   imgaug = callPackage ../development/python-modules/imgaug { };
+
+  importlib-metadata = buildPythonPackage rec {
+    name = "importlib-metadata-${version}";
+    version = "0.6";
+
+    src = pkgs.fetchurl {
+      url = "https://files.pythonhosted.org/packages/89/5a/cb2f3de935073bdb3a7d41ad0df68235d25fae4b60779b8cc218a18a802b/importlib_metadata-0.6.tar.gz";
+      sha256 = "074v6mq5dbbr0y697fgajm503sg83faxzvwz41jxy6h0z622rc1n";
+    };
+
+    buildInputs = with self; [ setuptools wheel ];
+    propagatedBuildInputs = with self; [
+      importlib_resources
+      (optional (pythonOlder "3") contextlib2)
+    ];
+    checkPhase = ''
+      ${python.interpreter} -m unittest discover
+    '';
+
+    meta = {
+      description = "Read metadata from Python packages";
+      homepage = "http://importlib-metadata.readthedocs.io/";
+      license = licenses.asl20;
+    };
+  };
+
+  importlib_resources = buildPythonPackage rec {
+    name = "importlib_resources-${version}";
+    version = "1.0.1";
+
+    src = pkgs.fetchurl {
+      url = "https://files.pythonhosted.org/packages/d2/09/1f4148ee5ec0022d122bb9a94428a70f858863d47df573dd8c382fa8f1c2/importlib_resources-1.0.1.tar.gz";
+      sha256 = "73f454e062ac149bafd262b18c1f9ebc91f53bd6474e028d1bf1c59ebd152efb";
+    };
+
+    buildInputs = with self; [ setuptools wheel ];
+    propagatedBuildInputs = with self; [
+      (optional (pythonOlder "3") pathlib2)
+      (optional (pythonOlder "3.5") typing)
+    ];
+    checkPhase = ''
+      ${python.interpreter} -m unittest discover
+    '';
+
+    meta = {
+      description = "Read resources from Python packages";
+      homepage = "http://importlib-resources.readthedocs.io/";
+      license = licenses.asl20;
+    };
+  };
 
   inflection = callPackage ../development/python-modules/inflection { };
 
@@ -8774,10 +8810,10 @@ in {
   xlrd = buildPythonPackage rec {
     name = "xlrd-${version}";
 
-    version = "0.9.4";
+    version = "1.1.0";
     src = pkgs.fetchurl {
       url = "mirror://pypi/x/xlrd/xlrd-${version}.tar.gz";
-      sha256 = "8e8d3359f39541a6ff937f4030db54864836a06e42988c452db5b6b86d29ea72";
+      sha256 = "1qnp51lf6bp6d4m3x8av81hknhvmlvgmzvm86gz1bng62daqh8ca";
     };
 
     buildInputs = with self; [ nose ];
@@ -9136,12 +9172,12 @@ in {
   pgspecial = callPackage ../development/python-modules/pgspecial { };
 
   pickleshare = buildPythonPackage rec {
-    version = "0.7.4";
+    version = "0.7.5";
     name = "pickleshare-${version}";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/p/pickleshare/${name}.tar.gz";
-      sha256 = "84a9257227dfdd6fe1b4be1319096c20eb85ff1e82c7932f36efccfe1b09737b";
+      sha256 = "1jmghg3c53yp1i8cm6pcrm280ayi8621rwyav9fac7awjr3kss47";
     };
 
     propagatedBuildInputs = with self; [pathpy] ++ optional (pythonOlder "3.4") pathlib2;
@@ -9386,6 +9422,8 @@ in {
 
 
   prompt_toolkit = callPackage ../development/python-modules/prompt_toolkit { };
+
+  prompt_toolkit_1 = callPackage ../development/python-modules/prompt_toolkit/1.nix { };
 
   protobuf = callPackage ../development/python-modules/protobuf {
     disabled = isPyPy;
@@ -12898,7 +12936,7 @@ in {
 
   sure = buildPythonPackage rec {
     name = "sure-${version}";
-    version = "1.2.24";
+    version = "1.4.11";
 
     LC_ALL="en_US.UTF-8";
 
@@ -12906,7 +12944,7 @@ in {
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/s/sure/${name}.tar.gz";
-      sha256 = "1lyjq0rvkbv585dppjdq90lbkm6gyvag3wgrggjzyh7cpyh5c12w";
+      sha256 = "3c8d5271fb18e2c69e2613af1ad400d8df090f1456081635bd3171847303cdaa";
     };
 
     buildInputs = with self; [ nose pkgs.glibcLocales ];

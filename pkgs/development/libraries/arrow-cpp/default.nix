@@ -38,6 +38,19 @@ stdenv.mkDerivation rec {
     substituteInPlace cmake_modules/FindLz4.cmake --replace CMAKE_STATIC_LIBRARY CMAKE_SHARED_LIBRARY
     substituteInPlace cmake_modules/FindSnappy.cmake --replace CMAKE_STATIC_LIBRARY CMAKE_SHARED_LIBRARY
 
+    substituteInPlace src/arrow/util/compression_zstd.cc \
+     --replace '"Corrupt ZSTD compressed data."' '"Corrupt ZSTD compressed data; " + std::to_string(decompressed_size) + " != " + std::to_string(output_len)' \
+     --replace '"ZSTD compression failure."' '"ZSTD compression failure; " + std::string(ZSTD_getErrorName(*output_length))' \
+     --replace 'int64_t decompressed_size' 'uint8_t buf[32]; int64_t decompressed_size' \
+     --replace 'ZSTD_decompress(output_buffer, static_cast<size_t>(output_len),' \
+               'ZSTD_decompress(output_len ? output_buffer : buf, output_len ? static_cast<size_t>(output_len) : sizeof(buf),'
+
+    substituteInPlace src/arrow/util/compression-test.cc \
+     --replace '// compress with c1'   'SCOPED_TRACE("compress with c1, " + std::to_string(data.size()) + " bytes");' \
+     --replace '// compress with c2'   'SCOPED_TRACE("compress with c2, " + std::to_string(data.size()) + " bytes");' \
+     --replace '// decompress with c1' 'SCOPED_TRACE("decompress with c1, " + std::to_string(data.size()) + " bytes compressed to " + std::to_string(compressed.size()));' \
+     --replace '// decompress with c2' 'SCOPED_TRACE("decompress with c2, " + std::to_string(data.size()) + " bytes compressed to " + std::to_string(compressed.size()));'
+
     patchShebangs build-support/
   '';
 

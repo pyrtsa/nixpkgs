@@ -4,11 +4,11 @@
 
 buildPythonPackage rec {
   pname = "moto";
-  version = "1.3.5";
+  version = "1.3.6";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "52426f2567e51ba73fdc7c7d617236b7e7918dca2421caabe13e5290942b53d8";
+    sha256 = "1fwwf0234v0fk6wqqr6623qfpz0cg4anq51cq00s1nfbal6hmzjq";
   };
 
   postPatch = ''
@@ -18,7 +18,10 @@ buildPythonPackage rec {
     substituteInPlace setup.py \
       --replace "python-dateutil<2.7.0" "python-dateutil<3.0.0" \
       --replace "aws-xray-sdk<0.96," "aws-xray-sdk" \
-      --replace "jsondiff==1.1.1" "jsondiff>=1.1.1"
+      --replace "jsondiff==1.1.1" "jsondiff>=1.1.1" \
+      --replace "boto3>=1.6.16,<1.8" "boto3>=1.6.16,<1.10" \
+      --replace "botocore>=1.9.16,<1.11" "botocore>=1.9.16,<1.13" \
+      --replace "python-jose<3.0.0" "python-jose<3.1.0"
   '';
 
   propagatedBuildInputs = [

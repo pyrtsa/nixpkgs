@@ -1,4 +1,4 @@
-{ lib, buildPythonPackage, python, isPy3k, fetchurl, arrow-cpp, cmake, cython, futures, JPype1, numpy, pandas, pytest, pytestrunner, pkgconfig, setuptools_scm, six }:
+{ lib, buildPythonPackage, python, isPy3k, fetchurl, arrow-cpp, cmake, cython, futures, JPype1, jdk, numpy, pandas, pytest, pytestrunner, pkgconfig, setuptools_scm, six }:
 
 let
   _arrow-cpp = arrow-cpp.override { inherit python; };
@@ -13,10 +13,15 @@ buildPythonPackage rec {
 
   nativeBuildInputs = [ cmake cython pkgconfig setuptools_scm ];
   propagatedBuildInputs = [ numpy six ] ++ lib.optionals (!isPy3k) [ futures ];
-  checkInputs = [ pandas pytest pytestrunner JPype1 ];
+  checkInputs = [ pandas pytest pytestrunner JPype1 jdk ];
 
   PYARROW_BUILD_TYPE = "release";
   PYARROW_CMAKE_OPTIONS = "-DCMAKE_INSTALL_RPATH=${ARROW_HOME}/lib";
+
+  arrowToolsJar = fetchurl {
+    url = "https://search.maven.org/remotecontent?filepath=org/apache/arrow/arrow-tools/${version}/arrow-tools-${version}-jar-with-dependencies.jar";
+    sha256 = "0snj0d72nfxfj2zl0r9fq6lf1yqmp4h4kxg8i585l951rqnw5mxz";
+  };
 
   preCheck = ''
     rm pyarrow/tests/test_hdfs.py
@@ -30,12 +35,15 @@ buildPythonPackage rec {
 
     # probably broken on python2
     substituteInPlace pyarrow/tests/test_feather.py --replace "test_unicode_filename" "_disabled"
+  '';
 
-    # fails "error: [Errno 2] No such file or directory: 'test'" because
-    # nix_run_setup invocation somehow manages to import deserialize_buffer.py
-    # when it is not intended to be imported at all
-    rm pyarrow/tests/deserialize_buffer.py
-    substituteInPlace pyarrow/tests/test_feather.py --replace "test_deserialize_buffer_in_different_process" "_disabled"
+  checkPhase = ''
+    mkdir pyarrow-tests-alone
+    cp -r pyarrow/tests pyarrow-tests-alone/tests
+
+    export ARROW_TOOLS_JAR=${arrowToolsJar}
+    PYARROW_PYTEST_FLAGS=" -r sxX --durations=15 --parquet"
+    ${pytest}/bin/pytest $PYARROW_PYTEST_FLAGS pyarrow-tests-alone/tests
   '';
 
   ARROW_HOME = _arrow-cpp;

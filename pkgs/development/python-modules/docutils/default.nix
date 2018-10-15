@@ -14,6 +14,7 @@ buildPythonPackage rec {
     sha256 = "0x22fs3pdmr42kvz6c654756wja305qv6cx1zbhwlagvxgr4xrji";
   };
 
+  LC_ALL = "en_US.UTF-8";
   checkPhase = if isPy3k then ''
     ${python.interpreter} test3/alltests.py
   '' else ''

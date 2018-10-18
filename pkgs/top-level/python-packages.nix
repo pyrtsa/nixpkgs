@@ -5751,22 +5751,23 @@ in {
 
   gyp = buildPythonPackage rec {
     name = "gyp-${version}";
-    version = "2015-06-11";
+    version = "2018-08-30";
 
     src = pkgs.fetchgit {
       url = "https://chromium.googlesource.com/external/gyp.git";
-      rev = "fdc7b812f99e48c00e9a487bd56751bbeae07043";
-      sha256 = "1imgxsl4mr1662vsj2mlnpvvrbz71yk00w8p85vi5bkgmc6awgiz";
+      rev = "81286d388abf5c8f946f3f4be274bd987a690952";
+      sha256 = "0g0sfvfjyv51zf7mmsjs8srpmjsm0jsmih7iqlrfhwnklw1h25q9";
     };
 
-    prePatch = optionals pkgs.stdenv.isDarwin ''
-      sed -i 's/raise.*No Xcode or CLT version detected.*/version = "7.0.0"/' pylib/gyp/xcode_emulation.py
-    '';
-
     patches = optionals pkgs.stdenv.isDarwin [
+      ../development/python-modules/gyp/gyp-xcode-version-1000.patch
       ../development/python-modules/gyp/no-darwin-cflags.patch
       ../development/python-modules/gyp/no-xcode.patch
     ];
+
+    postPatch = optionals pkgs.stdenv.isDarwin ''
+      sed -i -e 's/raise.*No Xcode or CLT version detected.*/version = "10.0.0"/' pylib/gyp/xcode_emulation.py
+    '';
 
     disabled = isPy3k;
 

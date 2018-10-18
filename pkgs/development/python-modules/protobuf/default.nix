@@ -21,6 +21,10 @@ buildPythonPackage rec {
       cd *
     done
     cd python
+    for f in google/protobuf/pyext/*.cc; do
+      substituteInPlace $f \
+        --replace "= PyUnicode_AsUTF8AndSize" "= (char*)PyUnicode_AsUTF8AndSize"
+    done
   '';
 
   preConfigure = optionalString (versionAtLeast protobuf.version "2.6.0") ''

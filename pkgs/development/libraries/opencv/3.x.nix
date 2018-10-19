@@ -210,6 +210,7 @@ stdenv.mkDerivation rec {
   OpenBLAS_HOME = lib.optionalString enableOpenblas openblas;
 
   cmakeFlags = [
+    "-DENABLE_CXX11=ON"
     "-DWITH_OPENMP=ON"
     "-DBUILD_PROTOBUF=OFF"
     "-DPROTOBUF_UPDATE_FILES=ON"

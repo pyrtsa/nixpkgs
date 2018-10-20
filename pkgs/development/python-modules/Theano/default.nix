@@ -24,41 +24,20 @@ assert cudaSupport -> nvidia_x11 != null
                    && cudnn != null;
 
 let
-  wrapped = command: buildTop: buildInputs:
-    runCommandCC "${command}-wrapped" { inherit buildInputs; } ''
-      type -P '${command}' || { echo '${command}: not found'; exit 1; }
-      cat > "$out" <<EOF
-      #!$(type -P bash)
-      $(declare -xp | sed -e '/^[^=]\+="\('"''${NIX_STORE//\//\\/}"'\|[^\/]\)/!d')
-      declare -x NIX_BUILD_TOP="${buildTop}"
-      $(type -P '${command}') "\$@"
-      EOF
-      chmod +x "$out"
-    '';
-
-  # Theano spews warnings and disabled flags if the compiler isn't named g++
-  cxx_compiler = wrapped "g++" "\\$HOME/.theano"
-    (    stdenv.lib.optional cudaSupport libgpuarray_
-      ++ stdenv.lib.optional cudnnSupport cudnn );
-
   libgpuarray_ = libgpuarray.override { inherit cudaSupport cudatoolkit; };
 
 in buildPythonPackage rec {
   pname = "Theano";
-  version = "1.0.2";
+  version = "1.0.3";
 
   disabled = isPyPy || pythonOlder "2.6" || (isPy3k && pythonOlder "3.3");
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "6768e003d328a17011e6fca9126fbb8a6ffd3bb13cb21c450f3e724cca29abde";
+    sha256 = "0nhiq95svqlqbj91wjfj4rf0iajs8wc0di6l9pay1x8fshs3nzv3";
   };
 
-  postPatch = ''
-    substituteInPlace theano/configdefaults.py \
-      --replace 'StrParam(param, is_valid=warn_cxx)' 'StrParam('\'''${cxx_compiler}'\''', is_valid=warn_cxx)' \
-      --replace 'rc == 0 and config.cxx != ""' 'config.cxx != ""'
-  '' + stdenv.lib.optionalString cudaSupport ''
+  postPatch = stdenv.lib.optionalString cudaSupport ''
     substituteInPlace theano/configdefaults.py \
       --replace 'StrParam(get_cuda_root)' 'StrParam('\'''${cudatoolkit}'\''')'
   '' + stdenv.lib.optionalString cudnnSupport ''

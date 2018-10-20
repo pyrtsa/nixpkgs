@@ -10,7 +10,7 @@
 , scikitlearn ? null
 , six
 , tables ? null
-, Theano
+, Theano_0_9
 }:
 
 buildPythonPackage rec {
@@ -26,7 +26,7 @@ buildPythonPackage rec {
 
   checkInputs = [ nose pytest matplotlib scikitlearn tables ];
   buildInputs = [ cython ];
-  propagatedBuildInputs = [ numpy pyyaml six Theano ];
+  propagatedBuildInputs = [ numpy pyyaml six Theano_0_9 ];
 
   prePatch = ''
     # The developers of pylearn2 don't want to support the `python setup.py

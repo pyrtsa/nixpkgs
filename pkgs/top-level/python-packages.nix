@@ -12098,6 +12098,11 @@ in {
     inherit (pkgs.linuxPackages) nvidia_x11;
   };
 
+  Theano_0_9 = self.Theano.override {
+    version = "0.9.0";
+    sha256 = "05xwg00da8smkvkh6ywbywqzj8dw7x840jr74wqhdy9icmqncpbl";
+  };
+
   TheanoWithoutCuda = self.Theano.override {
     cudaSupport = false;
     cudnnSupport = false;

@@ -15,6 +15,8 @@
 , cudaSupport ? false, cudatoolkit
 , cudnnSupport ? false, cudnn
 , nvidia_x11
+, version ? "1.0.3"
+, sha256 ? "0nhiq95svqlqbj91wjfj4rf0iajs8wc0di6l9pay1x8fshs3nzv3"
 }:
 
 assert cudnnSupport -> cudaSupport;
@@ -28,13 +30,12 @@ let
 
 in buildPythonPackage rec {
   pname = "Theano";
-  version = "1.0.3";
+  inherit version;
 
   disabled = isPyPy || pythonOlder "2.6" || (isPy3k && pythonOlder "3.3");
 
   src = fetchPypi {
-    inherit pname version;
-    sha256 = "0nhiq95svqlqbj91wjfj4rf0iajs8wc0di6l9pay1x8fshs3nzv3";
+    inherit pname version sha256;
   };
 
   postPatch = stdenv.lib.optionalString cudaSupport ''

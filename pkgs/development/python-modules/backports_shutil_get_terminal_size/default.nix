@@ -31,5 +31,6 @@ if !(pythonOlder "3.3") then null else buildPythonPackage rec {
     homepage = https://github.com/chrippa/backports.shutil_get_terminal_size;
     license = with licenses; [ mit ];
     maintainers = with maintainers; [ timokau ];
+    priority = "9";
   };
 }

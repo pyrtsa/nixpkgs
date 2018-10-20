@@ -1665,6 +1665,8 @@ in {
 
   PyLD = callPackage ../development/python-modules/PyLD { };
 
+  pylearn2 = callPackage ../development/python-modules/pylearn2 { };
+
   python-jose = callPackage ../development/python-modules/python-jose {};
 
   python-json-logger = callPackage ../development/python-modules/python-json-logger { };

@@ -1,0 +1,2101 @@
+diff --git a/bin/pylearn2-plot-monitor b/bin/pylearn2-plot-monitor
+index a8e92a896..31dc6a0f9 100755
+--- a/bin/pylearn2-plot-monitor
++++ b/bin/pylearn2-plot-monitor
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python
+ # -*- encoding: utf-8 -*-
+-from theano.compat.six import exec_
++from six import exec_
+ 
+ from pylearn2.scripts import plot_monitor
+ filename = plot_monitor.__file__
+diff --git a/bin/pylearn2-print-monitor b/bin/pylearn2-print-monitor
+index c1c989c22..066b98e6a 100755
+--- a/bin/pylearn2-print-monitor
++++ b/bin/pylearn2-print-monitor
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python
+ # -*- encoding: utf-8 -*-
+-from theano.compat.six import exec_
++from six import exec_
+ 
+ from pylearn2.scripts import print_monitor
+ filename = print_monitor.__file__
+diff --git a/bin/pylearn2-show-examples b/bin/pylearn2-show-examples
+index 844f37656..b3f86b4d3 100755
+--- a/bin/pylearn2-show-examples
++++ b/bin/pylearn2-show-examples
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python
+ # -*- encoding: utf-8 -*-
+-from theano.compat.six import exec_
++from six import exec_
+ 
+ from pylearn2.scripts import show_examples
+ filename = show_examples.__file__
+diff --git a/bin/pylearn2-show-weights b/bin/pylearn2-show-weights
+index e1e6a0a47..a4d8d6d39 100755
+--- a/bin/pylearn2-show-weights
++++ b/bin/pylearn2-show-weights
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python
+ # -*- encoding: utf-8 -*-
+-from theano.compat.six import exec_
++from six import exec_
+ 
+ from pylearn2.scripts import show_weights
+ filename = show_weights.__file__
+diff --git a/bin/pylearn2-train b/bin/pylearn2-train
+index 7cfbf86e7..b8c079e33 100755
+--- a/bin/pylearn2-train
++++ b/bin/pylearn2-train
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python
+ # -*- encoding: utf-8 -*-
+-from theano.compat.six import exec_
++from six import exec_
+ 
+ from pylearn2.scripts import train
+ filename = train.__file__
+diff --git a/doc/internal/pull_request_checklist.txt b/doc/internal/pull_request_checklist.txt
+index ede8b3bb4..c48790802 100644
+--- a/doc/internal/pull_request_checklist.txt
++++ b/doc/internal/pull_request_checklist.txt
+@@ -123,7 +123,7 @@ which provides an equivalent pure-Python implementation if the built-in version
+ is not available.
+ 
+ You should consider carefully whether the iteration order over a dictionary
+-you're using could result in different behaviour. If in doubt, use an 
++you're using could result in different behaviour. If in doubt, use an
+ `OrderedDict`. For the `updates` parameter when creating Theano functions, you
+ _must_ use an `OrderedDict`, or a list of `(shared_variable,
+ update_expression)` tuples.
+@@ -142,13 +142,13 @@ initialize a logger in a new module with::
+ 
+ And subsequently call into it with `log.info()`, `log.warning()`, etc.
+ 
+-Are you creating a sequence and then immediately iterating over it? 
++Are you creating a sequence and then immediately iterating over it?
+ ===================================================================
+ 
+ If so, consider using the faster and more memory efficient versions.
+ 
+ * `xrange` instead of `range`.
+-* `from theano.compat.six.moves import zip as izip` instead of `zip`.
++* `from six.moves import zip as izip` instead of `zip`.
+   This import is for Python 3 compatibility.
+ 
+ 
+diff --git a/pylearn2/compat.py b/pylearn2/compat.py
+index 1c353a370..ab3d58ec1 100644
+--- a/pylearn2/compat.py
++++ b/pylearn2/compat.py
+@@ -1,7 +1,7 @@
+ """
+ Compatibility layer
+ """
+-from theano.compat import six
++import six
+ 
+ 
+ __all__ = ('OrderedDict', )
+diff --git a/pylearn2/config/tests/test_yaml_parse.py b/pylearn2/config/tests/test_yaml_parse.py
+index 1031c5a4d..390e9ad76 100644
+--- a/pylearn2/config/tests/test_yaml_parse.py
++++ b/pylearn2/config/tests/test_yaml_parse.py
+@@ -6,8 +6,8 @@ from __future__ import print_function
+ 
+ import os
+ import numpy as np
+-from theano.compat import six
+-from theano.compat.six.moves import cPickle
++import six
++from six.moves import cPickle
+ import tempfile
+ from numpy.testing import assert_
+ from os import environ, close
+diff --git a/pylearn2/config/yaml_parse.py b/pylearn2/config/yaml_parse.py
+index 986e88027..501984050 100644
+--- a/pylearn2/config/yaml_parse.py
++++ b/pylearn2/config/yaml_parse.py
+@@ -10,7 +10,7 @@ import logging
+ import warnings
+ import re
+ 
+-from theano.compat import six
++import six
+ 
+ SCIENTIFIC_NOTATION_REGEXP = r'^[\-\+]?(\d+\.?\d*|\d*\.?\d+)?[eE][\-\+]?\d+$'
+ 
+diff --git a/pylearn2/costs/cost.py b/pylearn2/costs/cost.py
+index 37554a75a..60333c325 100644
+--- a/pylearn2/costs/cost.py
++++ b/pylearn2/costs/cost.py
+@@ -9,9 +9,9 @@ import functools
+ import logging
+ import warnings
+ 
+-from theano.compat.six.moves import reduce
++from six.moves import reduce
+ import theano.tensor as T
+-from theano.compat.six.moves import zip as izip
++from six.moves import zip as izip
+ 
+ from pylearn2.compat import OrderedDict
+ from pylearn2.utils import safe_zip
+diff --git a/pylearn2/costs/dbm.py b/pylearn2/costs/dbm.py
+index f206a4c08..ba0450d1e 100644
+--- a/pylearn2/costs/dbm.py
++++ b/pylearn2/costs/dbm.py
+@@ -16,7 +16,7 @@ import numpy as np
+ import operator
+ import warnings
+ 
+-from theano.compat.six.moves import reduce, xrange
++from six.moves import reduce, xrange
+ from theano import config
+ from theano.sandbox.rng_mrg import MRG_RandomStreams
+ RandomStreams = MRG_RandomStreams
+diff --git a/pylearn2/costs/ebm_estimation.py b/pylearn2/costs/ebm_estimation.py
+index c02e5352e..06d14e141 100644
+--- a/pylearn2/costs/ebm_estimation.py
++++ b/pylearn2/costs/ebm_estimation.py
+@@ -8,7 +8,7 @@ import sys
+ 
+ from theano import scan
+ import theano.tensor as T
+-from theano.compat.six.moves import zip as izip
++from six.moves import zip as izip
+ 
+ from pylearn2.compat import OrderedDict
+ from pylearn2.costs.cost import Cost, DefaultDataSpecsMixin
+diff --git a/pylearn2/costs/mlp/__init__.py b/pylearn2/costs/mlp/__init__.py
+index c245f53aa..a4deb3576 100644
+--- a/pylearn2/costs/mlp/__init__.py
++++ b/pylearn2/costs/mlp/__init__.py
+@@ -10,7 +10,7 @@ import warnings
+ 
+ import theano
+ from theano import tensor as T
+-from theano.compat.six.moves import reduce
++from six.moves import reduce
+ 
+ from pylearn2.costs.cost import Cost, DefaultDataSpecsMixin, NullDataSpecsMixin
+ from pylearn2.utils import safe_izip
+diff --git a/pylearn2/cross_validation/blocks.py b/pylearn2/cross_validation/blocks.py
+index d2a00abd1..1c2a377e3 100644
+--- a/pylearn2/cross_validation/blocks.py
++++ b/pylearn2/cross_validation/blocks.py
+@@ -6,7 +6,7 @@ __author__ = "Steven Kearnes"
+ __copyright__ = "Copyright 2014, Stanford University"
+ __license__ = "3-clause BSD"
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.blocks import StackedBlocks
+ 
+ 
+diff --git a/pylearn2/dataset_get/dataset-get.py b/pylearn2/dataset_get/dataset-get.py
+index f7b702695..0f01e792b 100755
+--- a/pylearn2/dataset_get/dataset-get.py
++++ b/pylearn2/dataset_get/dataset-get.py
+@@ -24,7 +24,7 @@ import urllib,urllib2
+ import tarfile
+ import subprocess
+ 
+-from theano.compat.six.moves import input
++from six.moves import input
+ 
+ logger = logging.getLogger(__name__)
+ 
+diff --git a/pylearn2/dataset_get/helper-scripts/make-archive.py b/pylearn2/dataset_get/helper-scripts/make-archive.py
+index f44957bb0..0832427a1 100755
+--- a/pylearn2/dataset_get/helper-scripts/make-archive.py
++++ b/pylearn2/dataset_get/helper-scripts/make-archive.py
+@@ -11,7 +11,7 @@ __licence__   = "BSD 3-Clause http://www.opensource.org/licenses/BSD-3-Clause "
+ import logging
+ import os, sys, tarfile
+ 
+-from theano.compat.six.moves import input
++from six.moves import input
+ 
+ logger = logging.getLogger(__name__)
+ 
+diff --git a/pylearn2/datasets/binarized_mnist.py b/pylearn2/datasets/binarized_mnist.py
+index 8ed7bc251..cdfcc699d 100644
+--- a/pylearn2/datasets/binarized_mnist.py
++++ b/pylearn2/datasets/binarized_mnist.py
+@@ -16,7 +16,7 @@ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.dense_design_matrix import (
+     DenseDesignMatrix,
+     DefaultViewConverter
+diff --git a/pylearn2/datasets/cifar10.py b/pylearn2/datasets/cifar10.py
+index 73a172006..8b1ac133b 100644
+--- a/pylearn2/datasets/cifar10.py
++++ b/pylearn2/datasets/cifar10.py
+@@ -7,7 +7,7 @@ import os
+ import logging
+ 
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from pylearn2.datasets import cache, dense_design_matrix
+ from pylearn2.expr.preprocessing import global_contrast_normalize
+diff --git a/pylearn2/datasets/cifar100.py b/pylearn2/datasets/cifar100.py
+index 55d1a7d29..2bc9813fb 100644
+--- a/pylearn2/datasets/cifar100.py
++++ b/pylearn2/datasets/cifar100.py
+@@ -3,7 +3,7 @@ The CIFAR-100 dataset.
+ """
+ import numpy as np
+ N = np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.dense_design_matrix import (DenseDesignMatrix,
+                                                    DefaultViewConverter)
+ from pylearn2.utils import serial
+diff --git a/pylearn2/datasets/dense_design_matrix.py b/pylearn2/datasets/dense_design_matrix.py
+index c2e3a8556..b5ace4641 100644
+--- a/pylearn2/datasets/dense_design_matrix.py
++++ b/pylearn2/datasets/dense_design_matrix.py
+@@ -20,7 +20,7 @@ import logging
+ import warnings
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from pylearn2.datasets import cache
+ from pylearn2.utils.iteration import (
+diff --git a/pylearn2/datasets/hdf5.py b/pylearn2/datasets/hdf5.py
+index 7b586390d..b2bad789a 100644
+--- a/pylearn2/datasets/hdf5.py
++++ b/pylearn2/datasets/hdf5.py
+@@ -25,7 +25,7 @@ from pylearn2.utils import safe_zip, wraps, py_integer_types
+ from pylearn2.utils.iteration import FiniteDatasetIterator
+ from pylearn2.utils.exc import reraise_as
+ from pylearn2.space import Space, CompositeSpace
+-from theano.compat.six import string_types
++from six import string_types
+ 
+ 
+ class HDF5Dataset(Dataset):
+diff --git a/pylearn2/datasets/hdf5_deprecated.py b/pylearn2/datasets/hdf5_deprecated.py
+index caa1ab82e..140aaca9b 100644
+--- a/pylearn2/datasets/hdf5_deprecated.py
++++ b/pylearn2/datasets/hdf5_deprecated.py
+@@ -11,7 +11,7 @@ try:
+ except ImportError:
+     h5py = None
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import warnings
+ 
+ from pylearn2.datasets.dense_design_matrix import (DenseDesignMatrix,
+diff --git a/pylearn2/datasets/hepatitis.py b/pylearn2/datasets/hepatitis.py
+index 1216f6082..9f4e0dbda 100644
+--- a/pylearn2/datasets/hepatitis.py
++++ b/pylearn2/datasets/hepatitis.py
+@@ -9,7 +9,7 @@ __author__ = "Ian Goodfellow"
+ # http://archive.ics.uci.edu/ml/datasets/Hepatitis
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
+ 
+diff --git a/pylearn2/datasets/mnist.py b/pylearn2/datasets/mnist.py
+index 4a7684e57..5ca1112af 100644
+--- a/pylearn2/datasets/mnist.py
++++ b/pylearn2/datasets/mnist.py
+@@ -10,7 +10,7 @@ __email__ = "pylearn-dev@googlegroups"
+ 
+ import numpy as N
+ np = N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets import dense_design_matrix
+ from pylearn2.datasets import control
+ from pylearn2.datasets import cache
+diff --git a/pylearn2/datasets/norb_small.py b/pylearn2/datasets/norb_small.py
+index 09d52500f..ad27eef62 100644
+--- a/pylearn2/datasets/norb_small.py
++++ b/pylearn2/datasets/norb_small.py
+@@ -7,7 +7,7 @@ import numpy
+ np = numpy
+ import os
+ 
+-from theano.compat.six.moves import reduce
++from six.moves import reduce
+ 
+ from pylearn2.datasets import dense_design_matrix
+ from pylearn2.datasets import retina
+diff --git a/pylearn2/datasets/preprocessing.py b/pylearn2/datasets/preprocessing.py
+index 8676d7c84..e106f24ad 100644
+--- a/pylearn2/datasets/preprocessing.py
++++ b/pylearn2/datasets/preprocessing.py
+@@ -18,7 +18,7 @@ import time
+ import warnings
+ import os
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import scipy
+ try:
+     from scipy import linalg
+diff --git a/pylearn2/datasets/retina.py b/pylearn2/datasets/retina.py
+index 94e7e1ee6..c642eea13 100644
+--- a/pylearn2/datasets/retina.py
++++ b/pylearn2/datasets/retina.py
+@@ -4,7 +4,7 @@ Retina-inspired preprocessing as described in
+     In *AISTATS* 2009.
+ """
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.dense_design_matrix import DefaultViewConverter
+ from pylearn2.space import Conv2DSpace
+ 
+diff --git a/pylearn2/datasets/stl10.py b/pylearn2/datasets/stl10.py
+index 254be8b73..90bdb14d0 100644
+--- a/pylearn2/datasets/stl10.py
++++ b/pylearn2/datasets/stl10.py
+@@ -10,7 +10,7 @@ __license__ = "3-clause BSD"
+ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets import dense_design_matrix
+ from pylearn2.utils.serial import load
+ from pylearn2.utils import contains_nan
+diff --git a/pylearn2/datasets/svhn.py b/pylearn2/datasets/svhn.py
+index 3824c8ef1..70a5eef5f 100644
+--- a/pylearn2/datasets/svhn.py
++++ b/pylearn2/datasets/svhn.py
+@@ -12,7 +12,7 @@ except ImportError:
+     warnings.warn("Couldn't import tables, so far SVHN is "
+                   "only supported with PyTables")
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from pylearn2.datasets import dense_design_matrix
+ from pylearn2.utils.serial import load
+diff --git a/pylearn2/datasets/tests/test_norb.py b/pylearn2/datasets/tests/test_norb.py
+index 970a7304e..f59336f9c 100644
+--- a/pylearn2/datasets/tests/test_norb.py
++++ b/pylearn2/datasets/tests/test_norb.py
+@@ -4,7 +4,7 @@ Unit tests for ./norb.py
+ 
+ import unittest
+ import numpy
+-from theano.compat import six
++import six
+ from pylearn2.datasets.norb import SmallNORB
+ from pylearn2.datasets.norb_small import FoveatedNORB
+ from pylearn2.datasets.new_norb import NORB
+diff --git a/pylearn2/datasets/tl_challenge.py b/pylearn2/datasets/tl_challenge.py
+index 2d020e908..783a88c17 100644
+--- a/pylearn2/datasets/tl_challenge.py
++++ b/pylearn2/datasets/tl_challenge.py
+@@ -6,7 +6,7 @@ __license__ = "3-clause BSD"
+ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ import numpy as N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets import cache, dense_design_matrix
+ from pylearn2.utils.string_utils import preprocess
+ 
+diff --git a/pylearn2/datasets/transformer_dataset.py b/pylearn2/datasets/transformer_dataset.py
+index b5bae8a0c..f643bcb0d 100644
+--- a/pylearn2/datasets/transformer_dataset.py
++++ b/pylearn2/datasets/transformer_dataset.py
+@@ -9,7 +9,7 @@ __license__ = "3-clause BSD"
+ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+-from theano.compat.six import Iterator
++from six import Iterator
+ 
+ from pylearn2.datasets.dataset import Dataset
+ from pylearn2.space import CompositeSpace
+diff --git a/pylearn2/datasets/utlc.py b/pylearn2/datasets/utlc.py
+index bb2d010ec..924fff8e1 100644
+--- a/pylearn2/datasets/utlc.py
++++ b/pylearn2/datasets/utlc.py
+@@ -6,7 +6,7 @@ The user should use the load_ndarray_dataset or load_sparse_dataset function
+ See the file ${PYLEARN2_DATA_PATH}/UTLC/README for details on the datasets.
+ """
+ 
+-from theano.compat.six.moves import cPickle
++from six.moves import cPickle
+ import gzip
+ import os
+ 
+diff --git a/pylearn2/datasets/zca_dataset.py b/pylearn2/datasets/zca_dataset.py
+index 35ea1c485..954c7b530 100644
+--- a/pylearn2/datasets/zca_dataset.py
++++ b/pylearn2/datasets/zca_dataset.py
+@@ -17,7 +17,7 @@ from functools import wraps
+ import logging
+ import warnings
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
+ from pylearn2.config import yaml_parse
+ from pylearn2.datasets import control
+diff --git a/pylearn2/devtools/run_pyflakes.py b/pylearn2/devtools/run_pyflakes.py
+index 21d5eb61f..b35fd8d02 100644
+--- a/pylearn2/devtools/run_pyflakes.py
++++ b/pylearn2/devtools/run_pyflakes.py
+@@ -19,7 +19,7 @@ __email__ = "pylearn-dev@googlegroups"
+ import sys
+ import logging
+ 
+-from theano.compat import six
++import six
+ 
+ from pylearn2.devtools.list_files import list_files
+ from pylearn2.utils.shell import run_shell_command
+diff --git a/pylearn2/devtools/tests/docscrape.py b/pylearn2/devtools/tests/docscrape.py
+index cf2a22403..f15affd01 100644
+--- a/pylearn2/devtools/tests/docscrape.py
++++ b/pylearn2/devtools/tests/docscrape.py
+@@ -9,7 +9,7 @@ from nose.plugins.skip import SkipTest
+ import re
+ import sys
+ 
+-from theano.compat import six
++import six
+ 
+ 
+ class Reader(object):
+diff --git a/pylearn2/energy_functions/tests/test_rbm_energy.py b/pylearn2/energy_functions/tests/test_rbm_energy.py
+index f78c368ff..6a66c249e 100644
+--- a/pylearn2/energy_functions/tests/test_rbm_energy.py
++++ b/pylearn2/energy_functions/tests/test_rbm_energy.py
+@@ -2,7 +2,7 @@ import theano
+ theano.config.compute_test_value = 'off'
+ from pylearn2.energy_functions.rbm_energy import GRBM_Type_1
+ import numpy as N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano.tensor as T
+ from theano import function
+ from pylearn2.utils import as_floatX
+diff --git a/pylearn2/expr/normalize.py b/pylearn2/expr/normalize.py
+index 52a7a8592..a75885201 100644
+--- a/pylearn2/expr/normalize.py
++++ b/pylearn2/expr/normalize.py
+@@ -8,7 +8,7 @@ __license__ = "3-clause BSD"
+ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano.tensor as T
+ 
+ from pylearn2.sandbox.cuda_convnet.response_norm import CrossMapNorm
+diff --git a/pylearn2/expr/probabilistic_max_pooling.py b/pylearn2/expr/probabilistic_max_pooling.py
+index 543dd0e93..40f27e6ae 100644
+--- a/pylearn2/expr/probabilistic_max_pooling.py
++++ b/pylearn2/expr/probabilistic_max_pooling.py
+@@ -25,7 +25,7 @@ __email__ = "pylearn-dev@googlegroups"
+ import logging
+ import theano.tensor as T
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano import function
+ import time
+diff --git a/pylearn2/expr/stochastic_pool.py b/pylearn2/expr/stochastic_pool.py
+index 395715e43..9e4ddf732 100644
+--- a/pylearn2/expr/stochastic_pool.py
++++ b/pylearn2/expr/stochastic_pool.py
+@@ -13,7 +13,7 @@ __maintainer__ = "Mehdi Mirza"
+ __email__ = "mirzamom@iro"
+ 
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ from theano import tensor
+ from theano.gof.op import get_debug_values
+diff --git a/pylearn2/expr/tests/test_evaluation.py b/pylearn2/expr/tests/test_evaluation.py
+index 510c62f86..1909e4772 100644
+--- a/pylearn2/expr/tests/test_evaluation.py
++++ b/pylearn2/expr/tests/test_evaluation.py
+@@ -4,7 +4,7 @@ Tests of expr.evaluation
+ 
+ import numpy as np
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from pylearn2.expr.evaluation import all_pr
+ 
+diff --git a/pylearn2/expr/tests/test_normalize.py b/pylearn2/expr/tests/test_normalize.py
+index 85bf6e1a1..241173862 100644
+--- a/pylearn2/expr/tests/test_normalize.py
++++ b/pylearn2/expr/tests/test_normalize.py
+@@ -10,7 +10,7 @@ __email__ = "pylearn-dev@googlegroups"
+ import numpy as np
+ import warnings
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano import function
+ import theano.tensor as T
+diff --git a/pylearn2/expr/tests/test_probabilistic_max_pooling.py b/pylearn2/expr/tests/test_probabilistic_max_pooling.py
+index 03c1719f7..713ef893a 100644
+--- a/pylearn2/expr/tests/test_probabilistic_max_pooling.py
++++ b/pylearn2/expr/tests/test_probabilistic_max_pooling.py
+@@ -3,7 +3,7 @@ from __future__ import print_function
+ import numpy as np
+ import warnings
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano import function
+ import theano.tensor as T
+diff --git a/pylearn2/expr/tests/test_stochastic_pool.py b/pylearn2/expr/tests/test_stochastic_pool.py
+index 5898a106e..854dd1ea9 100644
+--- a/pylearn2/expr/tests/test_stochastic_pool.py
++++ b/pylearn2/expr/tests/test_stochastic_pool.py
+@@ -1,6 +1,6 @@
+ from collections import Counter
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ from pylearn2.expr.stochastic_pool import stochastic_max_pool_bc01, weighted_max_pool_bc01
+ 
+diff --git a/pylearn2/format/target_format.py b/pylearn2/format/target_format.py
+index 3b8ce470b..e00d27ca5 100644
+--- a/pylearn2/format/target_format.py
++++ b/pylearn2/format/target_format.py
+@@ -2,7 +2,7 @@
+ from operator import mul
+ 
+ import numpy as np
+-from theano.compat.six.moves import reduce
++from six.moves import reduce
+ import theano.sparse
+ if theano.sparse.enable_sparse:
+     scipy_available = True
+diff --git a/pylearn2/gui/get_weights_report.py b/pylearn2/gui/get_weights_report.py
+index 3c162c50f..0ec4da552 100755
+--- a/pylearn2/gui/get_weights_report.py
++++ b/pylearn2/gui/get_weights_report.py
+@@ -5,7 +5,7 @@
+ """
+ import logging
+ 
+-from theano.compat.six.moves import input
++from six.moves import input
+ 
+ from pylearn2.utils import serial
+ from pylearn2.gui import patch_viewer
+diff --git a/pylearn2/gui/graph_2D.py b/pylearn2/gui/graph_2D.py
+index 3122e92aa..ad25690e2 100644
+--- a/pylearn2/gui/graph_2D.py
++++ b/pylearn2/gui/graph_2D.py
+@@ -2,7 +2,7 @@
+ Classes for making simple 2D visualizations.
+ """
+ import numpy as N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ 
+ 
+diff --git a/pylearn2/gui/patch_viewer.py b/pylearn2/gui/patch_viewer.py
+index 92126940f..74c6a939a 100755
+--- a/pylearn2/gui/patch_viewer.py
++++ b/pylearn2/gui/patch_viewer.py
+@@ -4,7 +4,7 @@ Functionality for display and saving images of collections of images patches.
+ from __future__ import division
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.dense_design_matrix import DefaultViewConverter
+ from pylearn2.utils.image import Image, ensure_Image
+ from pylearn2.utils.image import show
+diff --git a/pylearn2/gui/tangent_plot.py b/pylearn2/gui/tangent_plot.py
+index 1d3ea0f94..b67e029be 100644
+--- a/pylearn2/gui/tangent_plot.py
++++ b/pylearn2/gui/tangent_plot.py
+@@ -8,7 +8,7 @@ try:
+     from matplotlib import pyplot
+ except Exception:
+     pyplot = None
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ 
+ def tangent_plot(x, y, s):
+diff --git a/pylearn2/linear/conv2d.py b/pylearn2/linear/conv2d.py
+index 4f91ce9e9..09f6dac78 100644
+--- a/pylearn2/linear/conv2d.py
++++ b/pylearn2/linear/conv2d.py
+@@ -12,7 +12,7 @@ __email__ = "pylearn-dev@googlegroups"
+ 
+ import functools
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ import theano.tensor as T
+ from theano.tensor.nnet.conv import conv2d
+diff --git a/pylearn2/linear/conv2d_c01b.py b/pylearn2/linear/conv2d_c01b.py
+index 8621700aa..2bb042c3e 100644
+--- a/pylearn2/linear/conv2d_c01b.py
++++ b/pylearn2/linear/conv2d_c01b.py
+@@ -20,7 +20,7 @@ import logging
+ import numpy as np
+ import warnings
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano.sandbox import cuda
+ import theano.tensor as T
+ 
+diff --git a/pylearn2/linear/local_c01b.py b/pylearn2/linear/local_c01b.py
+index ea5b4ef16..d7cde52a3 100644
+--- a/pylearn2/linear/local_c01b.py
++++ b/pylearn2/linear/local_c01b.py
+@@ -15,7 +15,7 @@ __email__ = "pylearn-dev@googlegroups"
+ 
+ import logging
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import warnings
+ 
+ from pylearn2.packaged_dependencies.theano_linear.unshared_conv.localdot import LocalDot
+diff --git a/pylearn2/linear/matrixmul.py b/pylearn2/linear/matrixmul.py
+index 8de1e4bcd..96362c476 100644
+--- a/pylearn2/linear/matrixmul.py
++++ b/pylearn2/linear/matrixmul.py
+@@ -10,7 +10,7 @@ __license__ = "3-clause BSD"
+ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import tensor as T
+ 
+ from pylearn2.linear.linear_transform import LinearTransform
+diff --git a/pylearn2/linear/tests/test_conv2d_c01b.py b/pylearn2/linear/tests/test_conv2d_c01b.py
+index 82e9f5182..675aca5ff 100644
+--- a/pylearn2/linear/tests/test_conv2d_c01b.py
++++ b/pylearn2/linear/tests/test_conv2d_c01b.py
+@@ -1,6 +1,6 @@
+ import theano
+ from theano import tensor
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import numpy
+ from pylearn2.linear.conv2d_c01b import (Conv2D, make_random_conv2D,
+     make_sparse_random_conv2D, setup_detector_layer_c01b)
+diff --git a/pylearn2/model_extensions/tests/test_model_extension.py b/pylearn2/model_extensions/tests/test_model_extension.py
+index 1f66e116b..76e389353 100644
+--- a/pylearn2/model_extensions/tests/test_model_extension.py
++++ b/pylearn2/model_extensions/tests/test_model_extension.py
+@@ -2,7 +2,7 @@
+ Tests for model_extensions.
+ """
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.models import Model
+ from pylearn2.model_extensions.model_extension import ModelExtension
+ 
+diff --git a/pylearn2/models/autoencoder.py b/pylearn2/models/autoencoder.py
+index 2b314557c..940d4e769 100644
+--- a/pylearn2/models/autoencoder.py
++++ b/pylearn2/models/autoencoder.py
+@@ -9,7 +9,7 @@ import operator
+ import numpy
+ import theano
+ from theano import tensor
+-from theano.compat.six.moves import zip as izip, reduce
++from six.moves import zip as izip, reduce
+ 
+ # Local imports
+ from pylearn2.blocks import Block, StackedBlocks
+diff --git a/pylearn2/models/dbm/dbm.py b/pylearn2/models/dbm/dbm.py
+index 699fc2636..ed76bc0ad 100755
+--- a/pylearn2/models/dbm/dbm.py
++++ b/pylearn2/models/dbm/dbm.py
+@@ -12,7 +12,7 @@ import logging
+ import operator
+ import numpy as np
+ 
+-from theano.compat.six.moves import reduce, xrange
++from six.moves import reduce, xrange
+ from theano import tensor as T, config
+ 
+ from pylearn2.compat import OrderedDict
+diff --git a/pylearn2/models/dbm/inference_procedure.py b/pylearn2/models/dbm/inference_procedure.py
+index 910e7ead3..d39edc81f 100644
+--- a/pylearn2/models/dbm/inference_procedure.py
++++ b/pylearn2/models/dbm/inference_procedure.py
+@@ -10,7 +10,7 @@ __maintainer__ = "LISA Lab"
+ import functools
+ import logging
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import gof
+ import theano.tensor as T
+ import theano
+diff --git a/pylearn2/models/dbm/ising.py b/pylearn2/models/dbm/ising.py
+index 00b7d9682..b757b66e6 100644
+--- a/pylearn2/models/dbm/ising.py
++++ b/pylearn2/models/dbm/ising.py
+@@ -35,7 +35,7 @@ import numpy as np
+ 
+ from theano import function
+ from theano.gof.op import get_debug_values
+-from theano.compat.six.moves import reduce
++from six.moves import reduce
+ from theano.compile.sharedvalue import SharedVariable
+ import theano.tensor as T
+ import warnings
+diff --git a/pylearn2/models/dbm/layer.py b/pylearn2/models/dbm/layer.py
+index 676c07b52..4558fef35 100644
+--- a/pylearn2/models/dbm/layer.py
++++ b/pylearn2/models/dbm/layer.py
+@@ -13,7 +13,7 @@ import functools
+ import logging
+ import numpy as np
+ import operator
+-from theano.compat.six.moves import input, reduce, xrange
++from six.moves import input, reduce, xrange
+ import time
+ import warnings
+ 
+diff --git a/pylearn2/models/dbm/sampling_procedure.py b/pylearn2/models/dbm/sampling_procedure.py
+index 1b1b1d1d3..758a862eb 100644
+--- a/pylearn2/models/dbm/sampling_procedure.py
++++ b/pylearn2/models/dbm/sampling_procedure.py
+@@ -7,7 +7,7 @@ __credits__ = ["Ian Goodfellow"]
+ __license__ = "3-clause BSD"
+ __maintainer__ = "LISA Lab"
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.compat import OrderedDict
+ from pylearn2.utils import py_integer_types
+ 
+diff --git a/pylearn2/models/differentiable_sparse_coding.py b/pylearn2/models/differentiable_sparse_coding.py
+index 9b5f62a8e..ad6d9b6fb 100644
+--- a/pylearn2/models/differentiable_sparse_coding.py
++++ b/pylearn2/models/differentiable_sparse_coding.py
+@@ -11,7 +11,7 @@ __email__ = "pylearn-dev@googlegroups"
+ 
+ import logging
+ import numpy as N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano.tensor as T
+ 
+ import theano
+diff --git a/pylearn2/models/gsn.py b/pylearn2/models/gsn.py
+index 14293a8b1..d471c81dd 100644
+--- a/pylearn2/models/gsn.py
++++ b/pylearn2/models/gsn.py
+@@ -20,7 +20,7 @@ import functools
+ import warnings
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ T = theano.tensor
+ 
+diff --git a/pylearn2/models/independent_multiclass_logistic.py b/pylearn2/models/independent_multiclass_logistic.py
+index ec8a489d2..bd2a535a9 100644
+--- a/pylearn2/models/independent_multiclass_logistic.py
++++ b/pylearn2/models/independent_multiclass_logistic.py
+@@ -15,7 +15,7 @@ try:
+ except ImportError:
+     LogisticRegression = None
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ logger = logging.getLogger(__name__)
+ 
+diff --git a/pylearn2/models/kmeans.py b/pylearn2/models/kmeans.py
+index 3bb15cef6..d675ff85a 100644
+--- a/pylearn2/models/kmeans.py
++++ b/pylearn2/models/kmeans.py
+@@ -2,7 +2,7 @@
+ 
+ import logging
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.blocks import Block
+ from pylearn2.models.model import Model
+ from pylearn2.space import VectorSpace
+diff --git a/pylearn2/models/local_coordinate_coding.py b/pylearn2/models/local_coordinate_coding.py
+index dd55290a8..987c3616b 100644
+--- a/pylearn2/models/local_coordinate_coding.py
++++ b/pylearn2/models/local_coordinate_coding.py
+@@ -8,7 +8,7 @@ from theano import function, shared
+ from pylearn2.optimization import linear_cg as cg
+ from pylearn2.optimization.feature_sign import feature_sign_search
+ import numpy as N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano.tensor as T
+ from pylearn2.utils.rng import make_np_rng
+ 
+diff --git a/pylearn2/models/maxout.py b/pylearn2/models/maxout.py
+index c68eb6e88..8e5bc8d60 100755
+--- a/pylearn2/models/maxout.py
++++ b/pylearn2/models/maxout.py
+@@ -30,8 +30,8 @@ import logging
+ import numpy as np
+ import warnings
+ 
+-from theano.compat.six.moves import xrange
+-from theano.compat.six.moves import zip as izip
++from six.moves import xrange
++from six.moves import zip as izip
+ from theano.sandbox import cuda
+ from theano import tensor as T
+ 
+diff --git a/pylearn2/models/mlp.py b/pylearn2/models/mlp.py
+index d779f560d..013723ba1 100755
+--- a/pylearn2/models/mlp.py
++++ b/pylearn2/models/mlp.py
+@@ -14,8 +14,8 @@ import sys
+ import warnings
+ 
+ import numpy as np
+-from theano.compat import six
+-from theano.compat.six.moves import reduce, xrange
++import six
++from six.moves import reduce, xrange
+ from theano import config
+ from theano.gof.op import get_debug_values
+ from theano.sandbox.cuda import cuda_enabled
+diff --git a/pylearn2/models/model.py b/pylearn2/models/model.py
+index cee8bf10d..187f3446c 100644
+--- a/pylearn2/models/model.py
++++ b/pylearn2/models/model.py
+@@ -7,10 +7,10 @@ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+ from collections import defaultdict
+-from theano.compat.six.moves import zip as izip_no_length_check
++from six.moves import zip as izip_no_length_check
+ import numpy as np
+ 
+-from theano.compat import six
++import six
+ from theano import tensor as T
+ 
+ from pylearn2.compat import OrderedDict
+diff --git a/pylearn2/models/pca.py b/pylearn2/models/pca.py
+index acdd7ded9..82a2ab6a1 100644
+--- a/pylearn2/models/pca.py
++++ b/pylearn2/models/pca.py
+@@ -10,7 +10,7 @@ import sys
+ # Third-party imports
+ import numpy
+ N = numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import warnings
+ from scipy import linalg, sparse
+ # Warning: ridiculous.
+diff --git a/pylearn2/models/rbm.py b/pylearn2/models/rbm.py
+index cc94952fd..ae5d9c67d 100644
+--- a/pylearn2/models/rbm.py
++++ b/pylearn2/models/rbm.py
+@@ -9,11 +9,11 @@ import logging
+ import numpy
+ N = numpy
+ np = numpy
+-from theano.compat import six
+-from theano.compat.six.moves import xrange
++import six
++from six.moves import xrange
+ import theano
+ from theano import tensor
+-from theano.compat.six.moves import zip as izip
++from six.moves import zip as izip
+ T = tensor
+ from theano.tensor import nnet
+ 
+diff --git a/pylearn2/models/s3c.py b/pylearn2/models/s3c.py
+index 5f0fcb6ef..b461b0ee6 100644
+--- a/pylearn2/models/s3c.py
++++ b/pylearn2/models/s3c.py
+@@ -13,7 +13,7 @@ import time
+ import warnings
+ 
+ import numpy as np
+-from theano.compat.six.moves import input, xrange
++from six.moves import input, xrange
+ from theano import config, function
+ from theano import scan
+ from theano.gof.op import get_debug_values, debug_error_message, debug_assert
+diff --git a/pylearn2/models/tests/test_dbm.py b/pylearn2/models/tests/test_dbm.py
+index 7c3e2d64c..55770c6df 100644
+--- a/pylearn2/models/tests/test_dbm.py
++++ b/pylearn2/models/tests/test_dbm.py
+@@ -13,7 +13,7 @@ import numpy as np
+ import random
+ assert hasattr(np, 'exp')
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano import function
+ from theano.sandbox.rng_mrg import MRG_RandomStreams
+diff --git a/pylearn2/models/tests/test_mlp.py b/pylearn2/models/tests/test_mlp.py
+index 88b916950..2fb6d7ccd 100644
+--- a/pylearn2/models/tests/test_mlp.py
++++ b/pylearn2/models/tests/test_mlp.py
+@@ -6,8 +6,8 @@ from nose.tools import assert_raises
+ from nose.plugins.skip import SkipTest
+ import numpy as np
+ 
+-from theano.compat import six
+-from theano.compat.six.moves import reduce, xrange
++import six
++from six.moves import reduce, xrange
+ import theano
+ from theano import tensor, config
+ T = tensor
+diff --git a/pylearn2/models/tests/test_mnd.py b/pylearn2/models/tests/test_mnd.py
+index ad325d7dc..235f161e1 100644
+--- a/pylearn2/models/tests/test_mnd.py
++++ b/pylearn2/models/tests/test_mnd.py
+@@ -1,7 +1,7 @@
+ from __future__ import print_function
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.models.mnd import DiagonalMND
+ from pylearn2.models.mnd import kl_divergence
+ from pylearn2.optimization.batch_gradient_descent import BatchGradientDescent
+diff --git a/pylearn2/models/tests/test_reflection_clip.py b/pylearn2/models/tests/test_reflection_clip.py
+index 33c31c1b3..2d8d0b716 100644
+--- a/pylearn2/models/tests/test_reflection_clip.py
++++ b/pylearn2/models/tests/test_reflection_clip.py
+@@ -1,6 +1,6 @@
+ import numpy as np
+ from pylearn2.models.s3c import reflection_clip
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import function
+ from theano import shared
+ from pylearn2.utils.rng import make_np_rng
+diff --git a/pylearn2/models/tests/test_s3c_inference.py b/pylearn2/models/tests/test_s3c_inference.py
+index 16f358bb3..68ff3b5be 100644
+--- a/pylearn2/models/tests/test_s3c_inference.py
++++ b/pylearn2/models/tests/test_s3c_inference.py
+@@ -7,7 +7,7 @@ from pylearn2.models.s3c import E_Step
+ from pylearn2.utils import contains_nan
+ from theano import function
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano.tensor as T
+ from theano import config
+ #from pylearn2.utils import serial
+diff --git a/pylearn2/models/tests/test_svm.py b/pylearn2/models/tests/test_svm.py
+index c2b9e2a00..3bb2c9c53 100644
+--- a/pylearn2/models/tests/test_svm.py
++++ b/pylearn2/models/tests/test_svm.py
+@@ -4,7 +4,7 @@ from __future__ import print_function
+ from pylearn2.datasets.mnist import MNIST
+ from pylearn2.testing.skip import skip_if_no_sklearn, skip_if_no_data
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import unittest
+ DenseMulticlassSVM = None
+ 
+diff --git a/pylearn2/monitor.py b/pylearn2/monitor.py
+index f30d7b0aa..38c4612d3 100644
+--- a/pylearn2/monitor.py
++++ b/pylearn2/monitor.py
+@@ -14,7 +14,7 @@ import time
+ import warnings
+ import logging
+ import numpy as np
+-from theano.compat import six
++import six
+ 
+ from pylearn2.compat import OrderedDict
+ import theano.sparse
+diff --git a/pylearn2/optimization/batch_gradient_descent.py b/pylearn2/optimization/batch_gradient_descent.py
+index 8a74634f8..a13c1d6ac 100644
+--- a/pylearn2/optimization/batch_gradient_descent.py
++++ b/pylearn2/optimization/batch_gradient_descent.py
+@@ -14,7 +14,7 @@ import logging
+ import time
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from theano import config
+ from theano.printing import var_descriptor
+diff --git a/pylearn2/optimization/feature_sign.py b/pylearn2/optimization/feature_sign.py
+index 02adf71f4..76afdcca5 100644
+--- a/pylearn2/optimization/feature_sign.py
++++ b/pylearn2/optimization/feature_sign.py
+@@ -15,8 +15,8 @@ from itertools import count
+ 
+ import logging
+ import numpy as np
+-from theano.compat import six
+-from theano.compat.six.moves import zip as izip
++import six
++from six.moves import zip as izip
+ 
+ log = logging.getLogger(__name__)
+ log.setLevel(logging.INFO)
+diff --git a/pylearn2/optimization/test_batch_gradient_descent.py b/pylearn2/optimization/test_batch_gradient_descent.py
+index c38af4d42..b7c57199b 100644
+--- a/pylearn2/optimization/test_batch_gradient_descent.py
++++ b/pylearn2/optimization/test_batch_gradient_descent.py
+@@ -4,7 +4,7 @@ from pylearn2.optimization.batch_gradient_descent import BatchGradientDescent
+ import theano.tensor as T
+ from pylearn2.utils import sharedX
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano.printing import min_informative_str
+ 
+diff --git a/pylearn2/optimization/test_linesearch.py b/pylearn2/optimization/test_linesearch.py
+index 4ae9976e6..58a58375d 100644
+--- a/pylearn2/optimization/test_linesearch.py
++++ b/pylearn2/optimization/test_linesearch.py
+@@ -6,7 +6,7 @@ import warnings
+ import theano
+ import theano.tensor as TT
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from .linesearch import scalar_armijo_search
+ from .linesearch import scalar_search_wolfe2
+ 
+diff --git a/pylearn2/optimization/test_minres.py b/pylearn2/optimization/test_minres.py
+index 69c83abeb..1084edc23 100644
+--- a/pylearn2/optimization/test_minres.py
++++ b/pylearn2/optimization/test_minres.py
+@@ -1,7 +1,7 @@
+ from __future__ import print_function
+ 
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ import theano.tensor as TT
+ 
+diff --git a/pylearn2/packaged_dependencies/theano_linear/imaging.py b/pylearn2/packaged_dependencies/theano_linear/imaging.py
+index eb9188061..394d0a228 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/imaging.py
++++ b/pylearn2/packaged_dependencies/theano_linear/imaging.py
+@@ -6,7 +6,7 @@
+ import logging
+ import sys
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.utils.image import Image, ensure_Image
+ 
+ 
+diff --git a/pylearn2/packaged_dependencies/theano_linear/linear.py b/pylearn2/packaged_dependencies/theano_linear/linear.py
+index cc1b705a2..d33ef99ea 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/linear.py
++++ b/pylearn2/packaged_dependencies/theano_linear/linear.py
+@@ -6,7 +6,7 @@
+ import numpy
+ import theano
+ from theano import tensor
+-from theano.compat.six.moves import reduce
++from six.moves import reduce
+ 
+ from pylearn2.utils import py_integer_types
+ 
+diff --git a/pylearn2/packaged_dependencies/theano_linear/spconv.py b/pylearn2/packaged_dependencies/theano_linear/spconv.py
+index 17d4e1b7a..175335d16 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/spconv.py
++++ b/pylearn2/packaged_dependencies/theano_linear/spconv.py
+@@ -10,7 +10,7 @@ To read about different sparse formats, see U{http://www-users.cs.umn.edu/~saad/
+ import logging
+ import numpy
+ from scipy import sparse as scipy_sparse
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ import theano
+ import theano.sparse
+diff --git a/pylearn2/packaged_dependencies/theano_linear/test_spconv.py b/pylearn2/packaged_dependencies/theano_linear/test_spconv.py
+index e74b64ecc..e008434f9 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/test_spconv.py
++++ b/pylearn2/packaged_dependencies/theano_linear/test_spconv.py
+@@ -1,4 +1,4 @@
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ activate_test_spconv = 0
+ if activate_test_spconv:
+     import sys
+diff --git a/pylearn2/packaged_dependencies/theano_linear/unshared_conv/localdot.py b/pylearn2/packaged_dependencies/theano_linear/unshared_conv/localdot.py
+index 2c42cc923..a3060a1ae 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/unshared_conv/localdot.py
++++ b/pylearn2/packaged_dependencies/theano_linear/unshared_conv/localdot.py
+@@ -5,7 +5,7 @@ WRITEME
+ import logging
+ from ..linear import LinearTransform
+ from .unshared_conv import FilterActs, ImgActs
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano.sandbox import cuda
+ if cuda.cuda_available:
+     import gpu_unshared_conv # register optimizations
+diff --git a/pylearn2/packaged_dependencies/theano_linear/unshared_conv/test_localdot.py b/pylearn2/packaged_dependencies/theano_linear/unshared_conv/test_localdot.py
+index 9402aaedf..0fb56f68e 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/unshared_conv/test_localdot.py
++++ b/pylearn2/packaged_dependencies/theano_linear/unshared_conv/test_localdot.py
+@@ -4,7 +4,7 @@ import nose
+ import unittest
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ 
+ from .localdot import LocalDot
+diff --git a/pylearn2/packaged_dependencies/theano_linear/unshared_conv/unshared_conv.py b/pylearn2/packaged_dependencies/theano_linear/unshared_conv/unshared_conv.py
+index 4bacf8a25..1ee28ef53 100644
+--- a/pylearn2/packaged_dependencies/theano_linear/unshared_conv/unshared_conv.py
++++ b/pylearn2/packaged_dependencies/theano_linear/unshared_conv/unshared_conv.py
+@@ -5,7 +5,7 @@ XXX
+ from __future__ import print_function
+ 
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ 
+ # Use grad_not_implemented for versions of theano that support it
+diff --git a/pylearn2/rbm_tools.py b/pylearn2/rbm_tools.py
+index 3e8602870..fa089c20b 100644
+--- a/pylearn2/rbm_tools.py
++++ b/pylearn2/rbm_tools.py
+@@ -1,6 +1,6 @@
+ """Tools for estimating the partition function of an RBM"""
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ from theano import tensor, config
+ from theano.tensor import nnet
+diff --git a/pylearn2/sandbox/cuda_convnet/bench.py b/pylearn2/sandbox/cuda_convnet/bench.py
+index 6c9f160a7..14c7c11ac 100644
+--- a/pylearn2/sandbox/cuda_convnet/bench.py
++++ b/pylearn2/sandbox/cuda_convnet/bench.py
+@@ -8,7 +8,7 @@ __email__ = "pylearn-dev@googlegroups"
+ from pylearn2.testing.skip import skip_if_no_gpu
+ skip_if_no_gpu()
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import shared
+ from pylearn2.sandbox.cuda_convnet.filter_acts import FilterActs
+ from theano.tensor.nnet.conv import conv2d
+diff --git a/pylearn2/sandbox/cuda_convnet/specialized_bench.py b/pylearn2/sandbox/cuda_convnet/specialized_bench.py
+index c29c5ef7a..0d4b0da31 100644
+--- a/pylearn2/sandbox/cuda_convnet/specialized_bench.py
++++ b/pylearn2/sandbox/cuda_convnet/specialized_bench.py
+@@ -8,7 +8,7 @@ __email__ = "pylearn-dev@googlegroups"
+ from pylearn2.testing.skip import skip_if_no_gpu
+ skip_if_no_gpu()
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import shared
+ from pylearn2.sandbox.cuda_convnet.filter_acts import FilterActs
+ from theano.tensor.nnet.conv import conv2d
+diff --git a/pylearn2/sandbox/cuda_convnet/tests/profile_probabilistic_max_pooling.py b/pylearn2/sandbox/cuda_convnet/tests/profile_probabilistic_max_pooling.py
+index 728ce5a10..0d11d2a7b 100644
+--- a/pylearn2/sandbox/cuda_convnet/tests/profile_probabilistic_max_pooling.py
++++ b/pylearn2/sandbox/cuda_convnet/tests/profile_probabilistic_max_pooling.py
+@@ -2,7 +2,7 @@ from __future__ import print_function
+ 
+ import theano.tensor as T
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano import function
+ import time
+diff --git a/pylearn2/sandbox/cuda_convnet/tests/test_filter_acts_strided.py b/pylearn2/sandbox/cuda_convnet/tests/test_filter_acts_strided.py
+index 5288e37ed..941536503 100644
+--- a/pylearn2/sandbox/cuda_convnet/tests/test_filter_acts_strided.py
++++ b/pylearn2/sandbox/cuda_convnet/tests/test_filter_acts_strided.py
+@@ -6,7 +6,7 @@ from pylearn2.testing.skip import skip_if_no_gpu
+ skip_if_no_gpu()
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import shared
+ from theano.tensor import grad, constant
+ from pylearn2.sandbox.cuda_convnet.filter_acts import FilterActs
+diff --git a/pylearn2/sandbox/cuda_convnet/tests/test_image_acts_strided.py b/pylearn2/sandbox/cuda_convnet/tests/test_image_acts_strided.py
+index f94ddb29d..d6a34f56c 100644
+--- a/pylearn2/sandbox/cuda_convnet/tests/test_image_acts_strided.py
++++ b/pylearn2/sandbox/cuda_convnet/tests/test_image_acts_strided.py
+@@ -5,7 +5,7 @@ from pylearn2.testing.skip import skip_if_no_gpu
+ skip_if_no_gpu()
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import shared
+ from theano.tensor import grad, constant
+ from pylearn2.sandbox.cuda_convnet.filter_acts import FilterActs
+diff --git a/pylearn2/sandbox/cuda_convnet/tests/test_stochastic_pool.py b/pylearn2/sandbox/cuda_convnet/tests/test_stochastic_pool.py
+index d3e26ac87..44d29242c 100644
+--- a/pylearn2/sandbox/cuda_convnet/tests/test_stochastic_pool.py
++++ b/pylearn2/sandbox/cuda_convnet/tests/test_stochastic_pool.py
+@@ -2,7 +2,7 @@ from collections import Counter
+ import copy
+ 
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ 
+ from pylearn2.sandbox.cuda_convnet.stochastic_pool import (stochastic_max_pool_c01b,
+diff --git a/pylearn2/sandbox/cuda_convnet/tests/test_weight_acts_strided.py b/pylearn2/sandbox/cuda_convnet/tests/test_weight_acts_strided.py
+index ae838ed0b..1c684fd8d 100644
+--- a/pylearn2/sandbox/cuda_convnet/tests/test_weight_acts_strided.py
++++ b/pylearn2/sandbox/cuda_convnet/tests/test_weight_acts_strided.py
+@@ -6,7 +6,7 @@ from pylearn2.testing.skip import skip_if_no_gpu
+ skip_if_no_gpu()
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import shared
+ from theano.tensor import grad, constant
+ from pylearn2.sandbox.cuda_convnet.filter_acts import FilterActs
+diff --git a/pylearn2/sandbox/lisa_rl/bandit/plot_reward.py b/pylearn2/sandbox/lisa_rl/bandit/plot_reward.py
+index 4d8d6ba74..c92fec90c 100644
+--- a/pylearn2/sandbox/lisa_rl/bandit/plot_reward.py
++++ b/pylearn2/sandbox/lisa_rl/bandit/plot_reward.py
+@@ -2,7 +2,7 @@ __author__ = "Ian Goodfellow"
+ 
+ from matplotlib import pyplot
+ import sys
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ pyplot.hold(True)
+ 
+ from pylearn2.utils import serial
+diff --git a/pylearn2/sandbox/nlp/datasets/text.py b/pylearn2/sandbox/nlp/datasets/text.py
+index a58e75e2d..1a8d9ed12 100644
+--- a/pylearn2/sandbox/nlp/datasets/text.py
++++ b/pylearn2/sandbox/nlp/datasets/text.py
+@@ -1,5 +1,5 @@
+ """Datasets for working with text"""
+-from theano.compat import six
++import six
+ 
+ 
+ class TextDatasetMixin(object):
+diff --git a/pylearn2/sandbox/rnn/costs/gradient_clipping.py b/pylearn2/sandbox/rnn/costs/gradient_clipping.py
+index 7d79b9779..66a966d04 100644
+--- a/pylearn2/sandbox/rnn/costs/gradient_clipping.py
++++ b/pylearn2/sandbox/rnn/costs/gradient_clipping.py
+@@ -3,7 +3,7 @@ Implements gradient clipping as a cost wrapper.
+ """
+ from functools import wraps
+ 
+-from theano.compat import six
++import six
+ from theano import tensor
+ 
+ from pylearn2.compat import OrderedDict
+diff --git a/pylearn2/sandbox/rnn/models/mlp_hook.py b/pylearn2/sandbox/rnn/models/mlp_hook.py
+index 9eb8706e1..d77e18819 100644
+--- a/pylearn2/sandbox/rnn/models/mlp_hook.py
++++ b/pylearn2/sandbox/rnn/models/mlp_hook.py
+@@ -5,7 +5,7 @@ import functools
+ import inspect
+ import logging
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.sandbox.rnn.space import SequenceSpace, SequenceDataSpace
+ from pylearn2.space import CompositeSpace
+ from pylearn2.utils.track_version import MetaLibVersion
+diff --git a/pylearn2/sandbox/rnn/models/rnn.py b/pylearn2/sandbox/rnn/models/rnn.py
+index 6610229b0..1104d5194 100644
+--- a/pylearn2/sandbox/rnn/models/rnn.py
++++ b/pylearn2/sandbox/rnn/models/rnn.py
+@@ -13,8 +13,8 @@ import scipy.linalg
+ 
+ from functools import wraps
+ from theano import config, scan, tensor
+-from theano.compat import six
+-from theano.compat.six.moves import xrange
++import six
++from six.moves import xrange
+ 
+ from pylearn2.compat import OrderedDict
+ from pylearn2.models.mlp import Layer, MLP
+diff --git a/pylearn2/scripts/datasets/make_downsampled_stl10.py b/pylearn2/scripts/datasets/make_downsampled_stl10.py
+index f6b34bad5..1af6b5234 100644
+--- a/pylearn2/scripts/datasets/make_downsampled_stl10.py
++++ b/pylearn2/scripts/datasets/make_downsampled_stl10.py
+@@ -12,7 +12,7 @@ This script also translates the data to lie in [-127.5, 127.5] instead of
+ 
+ from __future__ import print_function
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.stl10 import STL10
+ from pylearn2.datasets.preprocessing import Downsample
+ from pylearn2.utils import string_utils as string
+diff --git a/pylearn2/scripts/datasets/make_mnistplus.py b/pylearn2/scripts/datasets/make_mnistplus.py
+index 1c282222a..3141f7dbe 100644
+--- a/pylearn2/scripts/datasets/make_mnistplus.py
++++ b/pylearn2/scripts/datasets/make_mnistplus.py
+@@ -17,7 +17,7 @@ Brodatz texture dataset.
+ 5. Perform embossing operation, given fixed lighting position obtained in 4.
+ """
+ import numpy
+-from theano.compat.six.moves import xrange, cPickle as pickle
++from six.moves import xrange, cPickle as pickle
+ import pylab as pl
+ 
+ from copy import copy
+diff --git a/pylearn2/scripts/datasets/step_through_norb_foveated.py b/pylearn2/scripts/datasets/step_through_norb_foveated.py
+index 45c05f7de..bdb698639 100644
+--- a/pylearn2/scripts/datasets/step_through_norb_foveated.py
++++ b/pylearn2/scripts/datasets/step_through_norb_foveated.py
+@@ -7,7 +7,7 @@ and its label.
+ """
+ import numpy as np
+ 
+-from theano.compat.six.moves import input
++from six.moves import input
+ 
+ from pylearn2.datasets.norb_small import FoveatedNORB
+ from pylearn2.gui.patch_viewer import PatchViewer
+diff --git a/pylearn2/scripts/dbm/dbm_metrics.py b/pylearn2/scripts/dbm/dbm_metrics.py
+index 13f50e325..10b304c89 100755
+--- a/pylearn2/scripts/dbm/dbm_metrics.py
++++ b/pylearn2/scripts/dbm/dbm_metrics.py
+@@ -34,7 +34,7 @@ import warnings
+ import numpy
+ import logging
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ import theano.tensor as T
+ from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+diff --git a/pylearn2/scripts/dbm/show_negative_chains.py b/pylearn2/scripts/dbm/show_negative_chains.py
+index ba9637514..8e34f77ee 100755
+--- a/pylearn2/scripts/dbm/show_negative_chains.py
++++ b/pylearn2/scripts/dbm/show_negative_chains.py
+@@ -17,7 +17,7 @@ from pylearn2.utils import serial
+ from pylearn2.datasets import control
+ from pylearn2.config import yaml_parse
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.gui.patch_viewer import PatchViewer
+ 
+ 
+diff --git a/pylearn2/scripts/dbm/show_reconstructions.py b/pylearn2/scripts/dbm/show_reconstructions.py
+index 15aec10c9..cb6f4d466 100755
+--- a/pylearn2/scripts/dbm/show_reconstructions.py
++++ b/pylearn2/scripts/dbm/show_reconstructions.py
+@@ -19,7 +19,7 @@ import sys
+ from pylearn2.config import yaml_parse
+ from pylearn2.gui.patch_viewer import PatchViewer
+ from pylearn2.utils import serial
+-from theano.compat.six.moves import input, xrange
++from six.moves import input, xrange
+ from theano import function
+ 
+ 
+diff --git a/pylearn2/scripts/dbm/show_samples.py b/pylearn2/scripts/dbm/show_samples.py
+index dc6fe46a4..ff1833d58 100755
+--- a/pylearn2/scripts/dbm/show_samples.py
++++ b/pylearn2/scripts/dbm/show_samples.py
+@@ -24,7 +24,7 @@ from pylearn2.gui.patch_viewer import PatchViewer
+ from pylearn2.utils import serial
+ from theano import function
+ from theano.sandbox.rng_mrg import MRG_RandomStreams
+-from theano.compat.six.moves import input, xrange
++from six.moves import input, xrange
+ 
+ 
+ def init_viewer(dataset, rows, cols):
+diff --git a/pylearn2/scripts/dbm/top_filters.py b/pylearn2/scripts/dbm/top_filters.py
+index 4545c6989..cdd87b8b1 100755
+--- a/pylearn2/scripts/dbm/top_filters.py
++++ b/pylearn2/scripts/dbm/top_filters.py
+@@ -30,7 +30,7 @@ __maintainer__ = "LISA Lab"
+ 
+ import numpy as np
+ import sys
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.config import yaml_parse
+ from pylearn2.gui.patch_viewer import PatchViewer
+ from pylearn2.gui.patch_viewer import make_viewer
+diff --git a/pylearn2/scripts/gsn_example.py b/pylearn2/scripts/gsn_example.py
+index 8d801d110..5ef25b2f4 100644
+--- a/pylearn2/scripts/gsn_example.py
++++ b/pylearn2/scripts/gsn_example.py
+@@ -9,7 +9,7 @@ import cPickle as pickle
+ import itertools
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano.tensor as T
+ 
+ from pylearn2.expr.activations import rescaled_softmax
+diff --git a/pylearn2/scripts/icml_2013_wrepl/black_box/make_submission.py b/pylearn2/scripts/icml_2013_wrepl/black_box/make_submission.py
+index 8e63c6d26..750aba1ca 100755
+--- a/pylearn2/scripts/icml_2013_wrepl/black_box/make_submission.py
++++ b/pylearn2/scripts/icml_2013_wrepl/black_box/make_submission.py
+@@ -1,7 +1,7 @@
+ from __future__ import print_function
+ 
+ import sys
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ def usage():
+     print("""usage: python make_submission.py model.pkl submission.csv)
+diff --git a/pylearn2/scripts/icml_2013_wrepl/emotions/make_submission.py b/pylearn2/scripts/icml_2013_wrepl/emotions/make_submission.py
+index 7e1ec8ac6..6b7d95466 100755
+--- a/pylearn2/scripts/icml_2013_wrepl/emotions/make_submission.py
++++ b/pylearn2/scripts/icml_2013_wrepl/emotions/make_submission.py
+@@ -1,7 +1,7 @@
+ from __future__ import print_function
+ 
+ import sys
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ def usage():
+     print("""usage: python make_submission.py model.pkl submission.csv)
+diff --git a/pylearn2/scripts/icml_2013_wrepl/multimodal/lcn.py b/pylearn2/scripts/icml_2013_wrepl/multimodal/lcn.py
+index 05ea100f6..3abf30af8 100644
+--- a/pylearn2/scripts/icml_2013_wrepl/multimodal/lcn.py
++++ b/pylearn2/scripts/icml_2013_wrepl/multimodal/lcn.py
+@@ -4,7 +4,7 @@ import numpy as np
+ import os
+ import sys
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.utils import image
+ from pylearn2.utils import serial
+ from pylearn2.utils.string_utils import preprocess
+diff --git a/pylearn2/scripts/icml_2013_wrepl/multimodal/make_submission.py b/pylearn2/scripts/icml_2013_wrepl/multimodal/make_submission.py
+index f80c0639a..278a34b74 100644
+--- a/pylearn2/scripts/icml_2013_wrepl/multimodal/make_submission.py
++++ b/pylearn2/scripts/icml_2013_wrepl/multimodal/make_submission.py
+@@ -3,7 +3,7 @@ from __future__ import print_function
+ import numpy as np
+ import sys
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import function
+ from theano import tensor as T
+ 
+diff --git a/pylearn2/scripts/jobman/experiment.py b/pylearn2/scripts/jobman/experiment.py
+index 72e928ca7..84a54c415 100644
+--- a/pylearn2/scripts/jobman/experiment.py
++++ b/pylearn2/scripts/jobman/experiment.py
+@@ -1,7 +1,7 @@
+ # Local imports
+ import pylearn2.config.yaml_parse
+ 
+-from theano.compat import six
++import six
+ import jobman
+ from jobman.tools import expand, flatten, DD
+ 
+diff --git a/pylearn2/scripts/papers/jia_huang_wkshp_11/assemble.py b/pylearn2/scripts/papers/jia_huang_wkshp_11/assemble.py
+index 4a26fba4d..538f3e95f 100644
+--- a/pylearn2/scripts/papers/jia_huang_wkshp_11/assemble.py
++++ b/pylearn2/scripts/papers/jia_huang_wkshp_11/assemble.py
+@@ -2,7 +2,7 @@ from __future__ import print_function
+ 
+ import numpy as np
+ import os
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ #check that the right files are present
+ names = os.listdir('.')
+diff --git a/pylearn2/scripts/papers/jia_huang_wkshp_11/extract_features.py b/pylearn2/scripts/papers/jia_huang_wkshp_11/extract_features.py
+index e9c39be9e..64aac7a95 100644
+--- a/pylearn2/scripts/papers/jia_huang_wkshp_11/extract_features.py
++++ b/pylearn2/scripts/papers/jia_huang_wkshp_11/extract_features.py
+@@ -19,7 +19,7 @@ import warnings
+ import time
+ import copy
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from theano import config
+ from theano import tensor as T
+ from theano import function
+diff --git a/pylearn2/scripts/papers/jia_huang_wkshp_11/fit_final_model.py b/pylearn2/scripts/papers/jia_huang_wkshp_11/fit_final_model.py
+index c89b6b523..fde40cc4f 100644
+--- a/pylearn2/scripts/papers/jia_huang_wkshp_11/fit_final_model.py
++++ b/pylearn2/scripts/papers/jia_huang_wkshp_11/fit_final_model.py
+@@ -7,7 +7,7 @@ from galatea.s3c.feature_loading import get_features
+ from pylearn2.utils import serial
+ from pylearn2.datasets.cifar10 import CIFAR10
+ from pylearn2.datasets.cifar100 import CIFAR100
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import gc
+ gc.collect()
+ 
+diff --git a/pylearn2/scripts/plot_monitor.py b/pylearn2/scripts/plot_monitor.py
+index 06125cfbd..2e72b46a3 100755
+--- a/pylearn2/scripts/plot_monitor.py
++++ b/pylearn2/scripts/plot_monitor.py
+@@ -22,7 +22,7 @@ import gc
+ import numpy as np
+ import sys
+ 
+-from theano.compat.six.moves import input, xrange
++from six.moves import input, xrange
+ from pylearn2.utils import serial
+ from theano.printing import _TagGenerator
+ from pylearn2.utils.string_utils import number_aware_alphabetical_key
+diff --git a/pylearn2/scripts/show_binocular_greyscale_examples.py b/pylearn2/scripts/show_binocular_greyscale_examples.py
+index 88650d23c..36edf0186 100755
+--- a/pylearn2/scripts/show_binocular_greyscale_examples.py
++++ b/pylearn2/scripts/show_binocular_greyscale_examples.py
+@@ -14,7 +14,7 @@ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+ import numpy as N
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.gui import patch_viewer
+ from pylearn2.config import yaml_parse
+ from optparse import OptionParser
+diff --git a/pylearn2/scripts/show_examples.py b/pylearn2/scripts/show_examples.py
+index cb7aad6e9..f0dbae8b0 100755
+--- a/pylearn2/scripts/show_examples.py
++++ b/pylearn2/scripts/show_examples.py
+@@ -15,7 +15,7 @@ __email__ = "pylearn-dev@googlegroups"
+ 
+ import argparse
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.gui import patch_viewer
+ from pylearn2.config import yaml_parse
+ 
+diff --git a/pylearn2/scripts/tests/test_dbm.py b/pylearn2/scripts/tests/test_dbm.py
+index 359813733..281b65fa2 100644
+--- a/pylearn2/scripts/tests/test_dbm.py
++++ b/pylearn2/scripts/tests/test_dbm.py
+@@ -15,7 +15,7 @@ from nose.tools import with_setup
+ from pylearn2.datasets import control
+ from pylearn2.utils import serial
+ from theano import function
+-from theano.compat.six.moves import cPickle
++from six.moves import cPickle
+ 
+ 
+ def setup():
+diff --git a/pylearn2/scripts/tests/test_show_weights.py b/pylearn2/scripts/tests/test_show_weights.py
+index 1682c2df9..86d170470 100644
+--- a/pylearn2/scripts/tests/test_show_weights.py
++++ b/pylearn2/scripts/tests/test_show_weights.py
+@@ -1,7 +1,7 @@
+ """
+ Tests for the show_weights.py script
+ """
+-from theano.compat.six.moves import cPickle
++from six.moves import cPickle
+ import os
+ 
+ from pylearn2.testing.skip import skip_if_no_matplotlib
+diff --git a/pylearn2/scripts/tests/test_summarize_model.py b/pylearn2/scripts/tests/test_summarize_model.py
+index 806925ac8..19da86391 100644
+--- a/pylearn2/scripts/tests/test_summarize_model.py
++++ b/pylearn2/scripts/tests/test_summarize_model.py
+@@ -1,7 +1,7 @@
+ """
+ A unit test for the summarize_model.py script
+ """
+-from theano.compat.six.moves import cPickle
++from six.moves import cPickle
+ import os
+ 
+ from pylearn2.testing.skip import skip_if_no_matplotlib
+diff --git a/pylearn2/space/__init__.py b/pylearn2/space/__init__.py
+index 9a997ee55..ee1e3ff61 100644
+--- a/pylearn2/space/__init__.py
++++ b/pylearn2/space/__init__.py
+@@ -35,7 +35,7 @@ __email__ = "pylearn-dev@googlegroups"
+ import functools
+ import warnings
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ import theano.sparse
+ from theano import tensor
+diff --git a/pylearn2/space/tests/test_space.py b/pylearn2/space/tests/test_space.py
+index e5448553e..918d60cdd 100644
+--- a/pylearn2/space/tests/test_space.py
++++ b/pylearn2/space/tests/test_space.py
+@@ -7,7 +7,7 @@ import itertools
+ import warnings
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ from theano import tensor
+ 
+diff --git a/pylearn2/testing/datasets.py b/pylearn2/testing/datasets.py
+index 2870d0b47..a6e066b9b 100644
+--- a/pylearn2/testing/datasets.py
++++ b/pylearn2/testing/datasets.py
+@@ -7,7 +7,7 @@ __maintainer__ = "LISA Lab"
+ __email__ = "pylearn-dev@googlegroups"
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
+ 
+ 
+diff --git a/pylearn2/tests/test_monitor.py b/pylearn2/tests/test_monitor.py
+index 3a0202177..4070501cb 100644
+--- a/pylearn2/tests/test_monitor.py
++++ b/pylearn2/tests/test_monitor.py
+@@ -3,7 +3,7 @@ from __future__ import print_function
+ import numpy as np
+ import warnings
+ from nose.tools import assert_raises
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from theano.compat import exc_message
+ from theano import shared
+diff --git a/pylearn2/train_extensions/plots.py b/pylearn2/train_extensions/plots.py
+index e9243a32a..1938e50a7 100644
+--- a/pylearn2/train_extensions/plots.py
++++ b/pylearn2/train_extensions/plots.py
+@@ -17,7 +17,7 @@ import numpy
+ np = numpy
+ from pylearn2.train_extensions import TrainExtension
+ 
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ from pylearn2.utils import as_floatX, wraps
+ 
+diff --git a/pylearn2/train_extensions/tests/test_window_flip.py b/pylearn2/train_extensions/tests/test_window_flip.py
+index 18d857ca2..7d3d022bf 100644
+--- a/pylearn2/train_extensions/tests/test_window_flip.py
++++ b/pylearn2/train_extensions/tests/test_window_flip.py
+@@ -1,7 +1,7 @@
+ import hashlib
+ import itertools
+ import numpy
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.train_extensions.window_flip import WindowAndFlip
+ 
+ from pylearn2.datasets.dense_design_matrix import (
+diff --git a/pylearn2/training_algorithms/default.py b/pylearn2/training_algorithms/default.py
+index 7de5272c2..e39c2bdff 100644
+--- a/pylearn2/training_algorithms/default.py
++++ b/pylearn2/training_algorithms/default.py
+@@ -3,7 +3,7 @@ A generic training algorithm that implements no real training code of its
+ own but just calls the model.train_batch method on minibatches of data.
+ """
+ import functools
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.monitor import Monitor
+ from pylearn2.training_algorithms.training_algorithm import TrainingAlgorithm
+ from pylearn2.utils import safe_zip
+diff --git a/pylearn2/training_algorithms/learning_rule.py b/pylearn2/training_algorithms/learning_rule.py
+index 59326988c..4b224be15 100644
+--- a/pylearn2/training_algorithms/learning_rule.py
++++ b/pylearn2/training_algorithms/learning_rule.py
+@@ -5,7 +5,7 @@ algorithm.
+ import numpy as np
+ import warnings
+ 
+-from theano.compat import six
++import six
+ from theano import config
+ from theano import tensor as T
+ 
+diff --git a/pylearn2/training_algorithms/sgd.py b/pylearn2/training_algorithms/sgd.py
+index 495a0fd9a..69c2f7ddf 100644
+--- a/pylearn2/training_algorithms/sgd.py
++++ b/pylearn2/training_algorithms/sgd.py
+@@ -15,7 +15,7 @@ import logging
+ import warnings
+ 
+ import numpy as np
+-from theano.compat import six
++import six
+ from theano import config
+ from theano import function
+ from theano.gof.op import get_debug_values
+diff --git a/pylearn2/training_algorithms/tests/test_bgd.py b/pylearn2/training_algorithms/tests/test_bgd.py
+index 49a574efd..18ebcd093 100644
+--- a/pylearn2/training_algorithms/tests/test_bgd.py
++++ b/pylearn2/training_algorithms/tests/test_bgd.py
+@@ -1,4 +1,4 @@
+-from theano.compat.six.moves import cStringIO, xrange
++from six.moves import cStringIO, xrange
+ import numpy as np
+ 
+ import theano.tensor as T
+diff --git a/pylearn2/training_algorithms/tests/test_learning_rule.py b/pylearn2/training_algorithms/tests/test_learning_rule.py
+index 85a59ed3b..10b35e774 100644
+--- a/pylearn2/training_algorithms/tests/test_learning_rule.py
++++ b/pylearn2/training_algorithms/tests/test_learning_rule.py
+@@ -1,6 +1,6 @@
+ import numpy as np
+ 
+-from theano.compat.six.moves import zip as izip
++from six.moves import zip as izip
+ 
+ from pylearn2.costs.cost import SumOfCosts
+ from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
+diff --git a/pylearn2/training_algorithms/tests/test_sgd.py b/pylearn2/training_algorithms/tests/test_sgd.py
+index bb70a7f07..5c3077027 100644
+--- a/pylearn2/training_algorithms/tests/test_sgd.py
++++ b/pylearn2/training_algorithms/tests/test_sgd.py
+@@ -1,7 +1,7 @@
+ from __future__ import print_function
+ 
+ import numpy as np
+-from theano.compat.six.moves import cStringIO, xrange
++from six.moves import cStringIO, xrange
+ import theano.tensor as T
+ from theano.tests import disturb_mem
+ from theano.tests.record import Record, RecordMode
+diff --git a/pylearn2/utils/__init__.py b/pylearn2/utils/__init__.py
+index fe8112629..bab68ba8f 100644
+--- a/pylearn2/utils/__init__.py
++++ b/pylearn2/utils/__init__.py
+@@ -8,7 +8,7 @@ import warnings
+ 
+ from .general import is_iterable, contains_nan, contains_inf, isfinite
+ import theano
+-from theano.compat.six.moves import input, zip as izip
++from six.moves import input, zip as izip
+ # Delay import of pylearn2.config.yaml_parse and pylearn2.datasets.control
+ # to avoid circular imports
+ yaml_parse = None
+@@ -16,7 +16,7 @@ control = None
+ cuda = None
+ 
+ import numpy as np
+-from theano.compat import six
++import six
+ 
+ from functools import partial
+ 
+diff --git a/pylearn2/utils/bit_strings.py b/pylearn2/utils/bit_strings.py
+index 13cafe93c..30d970d30 100644
+--- a/pylearn2/utils/bit_strings.py
++++ b/pylearn2/utils/bit_strings.py
+@@ -7,7 +7,7 @@ __email__ = "wardefar@iro"
+ __maintainer__ = "David Warde-Farley"
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ 
+ 
+ def all_bit_strings(bits, dtype='uint8'):
+diff --git a/pylearn2/utils/datasets.py b/pylearn2/utils/datasets.py
+index 19350177d..9bd3f43f8 100644
+--- a/pylearn2/utils/datasets.py
++++ b/pylearn2/utils/datasets.py
+@@ -12,7 +12,7 @@ import warnings
+ # Third-party imports
+ import numpy
+ import scipy
+-from theano.compat.six.moves import reduce, xrange
++from six.moves import reduce, xrange
+ import theano
+ try:
+     from matplotlib import pyplot
+diff --git a/pylearn2/utils/exc.py b/pylearn2/utils/exc.py
+index 423e5a867..3878684a8 100644
+--- a/pylearn2/utils/exc.py
++++ b/pylearn2/utils/exc.py
+@@ -3,7 +3,7 @@ __author__ = "Ian Goodfellow"
+ import sys
+ 
+ from pylearn2.utils.common_strings import environment_variable_essay
+-from theano.compat import six
++import six
+ 
+ 
+ class EnvironmentVariableError(Exception):
+diff --git a/pylearn2/utils/image.py b/pylearn2/utils/image.py
+index 9b90b9c26..0e12e0d29 100644
+--- a/pylearn2/utils/image.py
++++ b/pylearn2/utils/image.py
+@@ -5,8 +5,8 @@ import logging
+ import numpy as np
+ plt = None
+ axes = None
+-from theano.compat.six.moves import xrange
+-from theano.compat.six import string_types
++from six.moves import xrange
++from six import string_types
+ import warnings
+ try:
+     import matplotlib.pyplot as plt
+diff --git a/pylearn2/utils/insert_along_axis.py b/pylearn2/utils/insert_along_axis.py
+index 807ba30a0..7882059f4 100644
+--- a/pylearn2/utils/insert_along_axis.py
++++ b/pylearn2/utils/insert_along_axis.py
+@@ -11,7 +11,7 @@ __maintainer__ = "David Warde-Farley"
+ __email__ = "wardefar@iro"
+ 
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ import theano.tensor as tensor
+ from theano.gradient import grad_not_implemented
+diff --git a/pylearn2/utils/iteration.py b/pylearn2/utils/iteration.py
+index 5b1a08c46..71b3aba7d 100644
+--- a/pylearn2/utils/iteration.py
++++ b/pylearn2/utils/iteration.py
+@@ -19,7 +19,7 @@ from __future__ import division
+ 
+ import warnings
+ import numpy as np
+-from theano.compat import six
++import six
+ 
+ from pylearn2.space import CompositeSpace
+ from pylearn2.utils import safe_izip, wraps
+diff --git a/pylearn2/utils/logger.py b/pylearn2/utils/logger.py
+index f5e2cf126..2466528c8 100644
+--- a/pylearn2/utils/logger.py
++++ b/pylearn2/utils/logger.py
+@@ -27,8 +27,8 @@ __maintainer__ = "David Warde-Farley"
+ import logging
+ import sys
+ from logging import Handler, Formatter
+-from theano.compat import six
+-from theano.compat.six.moves import xrange
++import six
++from six.moves import xrange
+ 
+ 
+ class CustomFormatter(Formatter):
+diff --git a/pylearn2/utils/mnist_ubyte.py b/pylearn2/utils/mnist_ubyte.py
+index 9ac14e845..8bf2b6d28 100644
+--- a/pylearn2/utils/mnist_ubyte.py
++++ b/pylearn2/utils/mnist_ubyte.py
+@@ -12,7 +12,7 @@ __maintainer__ = "David Warde-Farley"
+ 
+ import struct
+ import numpy
+-from theano.compat import six
++import six
+ 
+ MNIST_IMAGE_MAGIC = 2051
+ MNIST_LABEL_MAGIC = 2049
+diff --git a/pylearn2/utils/pooling.py b/pylearn2/utils/pooling.py
+index 8ddb33864..8df935637 100644
+--- a/pylearn2/utils/pooling.py
++++ b/pylearn2/utils/pooling.py
+@@ -2,14 +2,14 @@
+ Support code for pooling operations (in pooled ICA type models, for now).
+ """
+ import numpy as np
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import theano
+ import warnings
+ try:
+     import scipy.sparse
+ except ImportError:
+     warnings.warn("Could not import scipy")
+-from theano.compat.six.moves import zip as izip
++from six.moves import zip as izip
+ 
+ from pylearn2.utils.exc import reraise_as
+ 
+diff --git a/pylearn2/utils/rng.py b/pylearn2/utils/rng.py
+index 56f9970a3..1b5398fba 100644
+--- a/pylearn2/utils/rng.py
++++ b/pylearn2/utils/rng.py
+@@ -12,7 +12,7 @@ __license__ = "3-clause BSD"
+ __email__ = "bouthilx@iro"
+ 
+ import numpy
+-from theano.compat import six
++import six
+ 
+ from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+ # more distributions but slower
+diff --git a/pylearn2/utils/serial.py b/pylearn2/utils/serial.py
+index 763305def..c12a02ceb 100755
+--- a/pylearn2/utils/serial.py
++++ b/pylearn2/utils/serial.py
+@@ -8,8 +8,8 @@ except ImportError:
+ import pickle
+ import logging
+ import numpy as np
+-from theano.compat import six
+-from theano.compat.six.moves import cPickle, xrange
++import six
++from six.moves import cPickle, xrange
+ import os
+ import time
+ import warnings
+diff --git a/pylearn2/utils/string_utils.py b/pylearn2/utils/string_utils.py
+index eaa64724f..856359bfc 100644
+--- a/pylearn2/utils/string_utils.py
++++ b/pylearn2/utils/string_utils.py
+@@ -3,8 +3,8 @@
+ import os
+ import re
+ 
+-from theano.compat.six import string_types
+-from theano.compat.six.moves import xrange
++from six import string_types
++from six.moves import xrange
+ 
+ from pylearn2.utils.exc import EnvironmentVariableError, NoDataPathError
+ from pylearn2.utils.exc import reraise_as
+diff --git a/pylearn2/utils/tests/test_mnist_ubyte.py b/pylearn2/utils/tests/test_mnist_ubyte.py
+index 1cc0cfa3a..08e5ae665 100644
+--- a/pylearn2/utils/tests/test_mnist_ubyte.py
++++ b/pylearn2/utils/tests/test_mnist_ubyte.py
+@@ -2,7 +2,7 @@ import struct
+ import tempfile
+ 
+ import numpy
+-from theano.compat import six
++import six
+ 
+ from pylearn2.utils.mnist_ubyte import read_mnist_images, read_mnist_labels
+ from pylearn2.utils.mnist_ubyte import MNIST_LABEL_MAGIC, MNIST_IMAGE_MAGIC
+diff --git a/pylearn2/utils/tests/test_serial.py b/pylearn2/utils/tests/test_serial.py
+index 11e28aad5..3f6af45aa 100644
+--- a/pylearn2/utils/tests/test_serial.py
++++ b/pylearn2/utils/tests/test_serial.py
+@@ -2,7 +2,7 @@
+ Tests for the pylearn2.utils.serial module. Currently only tests
+ read_bin_lush_matrix and load_train_file methods.
+ """
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ import pylearn2
+ from pylearn2.utils.serial import read_bin_lush_matrix, load_train_file
+ import numpy as np
+diff --git a/pylearn2/utils/tests/test_string_utils.py b/pylearn2/utils/tests/test_string_utils.py
+index 4035d62e9..e99272009 100644
+--- a/pylearn2/utils/tests/test_string_utils.py
++++ b/pylearn2/utils/tests/test_string_utils.py
+@@ -5,7 +5,7 @@ from __future__ import print_function
+ 
+ import os
+ import uuid
+-from theano.compat.six.moves import xrange
++from six.moves import xrange
+ from pylearn2.utils.string_utils import find_number
+ from pylearn2.utils.string_utils import preprocess
+ from pylearn2.utils.string_utils import tokenize_by_number
+diff --git a/pylearn2/utils/tests/test_video.py b/pylearn2/utils/tests/test_video.py
+index 58ad89785..17891c6cf 100644
+--- a/pylearn2/utils/tests/test_video.py
++++ b/pylearn2/utils/tests/test_video.py
+@@ -1,6 +1,6 @@
+ """Tests for pylearn2.utils.video"""
+ import numpy
+-from theano.compat import six
++import six
+ from pylearn2.compat import OrderedDict
+ from pylearn2.utils.video import FrameLookup, spatiotemporal_cubes
+ 
+diff --git a/pylearn2/utils/track_version.py b/pylearn2/utils/track_version.py
+index d895e5e5c..fc38cf41e 100644
+--- a/pylearn2/utils/track_version.py
++++ b/pylearn2/utils/track_version.py
+@@ -30,7 +30,7 @@ import subprocess
+ import sys
+ import warnings
+ 
+-from theano.compat import six
++import six
+ 
+ logger = logging.getLogger(__name__)
+ 
+diff --git a/setup.py b/setup.py
+index 831864bb8..99d577aa6 100644
+--- a/setup.py
++++ b/setup.py
+@@ -5,7 +5,7 @@ from setuptools import setup, find_packages, Extension
+ from setuptools.command.install import install
+ import numpy
+ 
+-from theano.compat.six.moves import input
++from six.moves import input
+ 
+ # Because many people neglected to run the pylearn2/utils/setup.py script
+ # separately, we compile the necessary Cython extensions here but because
